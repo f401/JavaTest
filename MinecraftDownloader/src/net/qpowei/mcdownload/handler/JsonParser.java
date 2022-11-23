@@ -5,6 +5,7 @@ import net.qpowei.mcdownload.Tools;
 import net.qpowei.mcdownload.handler.value.VersionIndex;
 import net.qpowei.mcdownload.handler.value.VersionList;
 import net.qpowei.mcdownload.util.FileUtils;
+import net.qpowei.mcdownload.handler.value.AssetsIndex;
 
 public class JsonParser
 {
@@ -27,4 +28,11 @@ public class JsonParser
 		return Tools.GLOBAL_GSON.fromJson(FileUtils.readFileAsString(file), VersionIndex.class);
 	}
 	
+	public static AssetsIndex parseAssetsIndex(String path) {
+		return parseAssetsIndex(new File(path));
+	}
+	
+	public static AssetsIndex parseAssetsIndex(File path) {
+        return Tools.GLOBAL_GSON.fromJson(FileUtils.readFileAsString(path), AssetsIndex.class);
+	}
 }
