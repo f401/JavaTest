@@ -1,0 +1,61 @@
+package net.qpowei.mcdownload.util;
+
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import net.qpowei.mcdownload.Tools;
+
+public class FileUtils
+{
+	public static String readFileAsString(String path) {
+		return readFileAsString(new File(path));
+	}
+	
+	public static String readFileAsString(File path) {
+		BufferedReader br = null;
+		StringBuilder result = new StringBuilder();
+		try {
+			br = new BufferedReader(new FileReader(path));
+			String tmp = "";
+			while((tmp = br.readLine()) != null) {
+				result.append(tmp + "\n");
+			}
+			result.deleteCharAt(result.length() - 1);// remove \n
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return result.toString();
+	}
+	
+	public static byte[] readFileAsBytes(File file) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(file);
+			int len = 0;
+			byte[] buffer = new byte[Tools.BUFFER_SIZE];
+			while((len = fis.read(buffer)) > 0) {
+				baos.write(buffer, 0, len);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				fis.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return baos.toByteArray();
+	}
+}
