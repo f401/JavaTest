@@ -2,6 +2,7 @@ package net.qpowei.mcdownload.handler;
 
 import net.qpowei.mcdownload.handler.value.VersionIndex;
 import java.util.Set;
+import java.util.Arrays;
 
 public class RulesString
 {
@@ -16,19 +17,18 @@ public class RulesString
 	public String getString() {return stringField;}
 	public VersionIndex.Rules[] getRules() {return ruleField;}
 	
-	public boolean setString(String needle) {
-		if (ruleField != null) {
-			stringField = needle;
-			return true;
-		}
-		return false;
+	public void setString(String needle) {
+		stringField = needle;
+		ruleField = null;
 	}
 	
-	public boolean setRule(VersionIndex.Rules[] needle) {
-		if (stringField != null) {
-			ruleField = needle;
-			return true;
-		}
-		return false;
+	public void setRule(VersionIndex.Rules[] needle) {
+		ruleField = needle;
+		stringField = null;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("RulesString {%s}", isString() ? getString() : Arrays.toString(getRules()));
 	}
 }

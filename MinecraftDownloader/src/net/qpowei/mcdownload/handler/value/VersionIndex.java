@@ -95,11 +95,15 @@ public class VersionIndex
 	}
 	
 	public static class Rules {
+		
+		public static final String ACTION_ALLOW = "allow";
+		public static final String ACTION_DISALLOW = "disallow";
+		
         public String action/*allow disallow*/;
 		public OS os;
 		//since 1.13, in arguments
 		public Features features;
-		public Object[] value;//可能是数组，也可能就是个String
+		public String value;//可能是数组，也可能就是个String
 		
 		public static class OS {
 			public String name, 
@@ -129,7 +133,7 @@ public class VersionIndex
 		@Override
 		public String toString() {
 			return String.format("Rules {action: %s, os: %s, features: %s, value: %s}"
-			, action, os, features, Arrays.toString(value));
+			, action, os, features, value);
 		}
 	}
 
