@@ -1,10 +1,10 @@
-package net.qpowei.mcdownload.handler;
+package net.qpowei.mcdownload.handler.types;
 
 import net.qpowei.mcdownload.handler.value.VersionIndex;
 import java.util.Set;
 import java.util.Arrays;
 
-public class RulesString
+public class StringAndRules
 {
 	private String stringField;
 	private VersionIndex.Rules ruleField[];

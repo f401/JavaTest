@@ -1,8 +1,8 @@
-package net.qpowei.mcdownload.handler;
+package net.qpowei.mcdownload.handler.types;
 
 import java.util.Arrays;
 
-public class StringArrayString 
+public class StringArrayAndString 
 {
 	private String stringField;
 	private String arrayField[];

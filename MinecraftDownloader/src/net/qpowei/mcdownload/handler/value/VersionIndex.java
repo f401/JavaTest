@@ -3,7 +3,7 @@ package net.qpowei.mcdownload.handler.value;
 import java.util.Map;
 import java.util.Arrays;
 import com.google.gson.annotations.SerializedName;
-import net.qpowei.mcdownload.handler.RulesString;
+import net.qpowei.mcdownload.handler.types.StringAndRules;
 
 public class VersionIndex
 {
@@ -84,8 +84,8 @@ public class VersionIndex
 	}
 	
 	public static class Argument {
-		public RulesString[] game;
-        public RulesString[] jvm;
+		public StringAndRules[] game;
+        public StringAndRules[] jvm;
 
 		@Override
 		public String toString() {
