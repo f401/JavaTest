@@ -7,7 +7,9 @@ import java.util.Arrays;
 public class StringAndRules
 {
 	private String stringField;
+	
 	private VersionIndex.Rules ruleField[];
+	private StringAndArray<String> valueField;
 	
 	public boolean isString() {return stringField != null;};
 	public boolean isRule() {return ruleField != null;}
@@ -16,6 +18,7 @@ public class StringAndRules
 	
 	public String getString() {return stringField;}
 	public VersionIndex.Rules[] getRules() {return ruleField;}
+	public StringAndArray getValue() {return valueField;}
 	
 	public void setString(String needle) {
 		stringField = needle;
@@ -26,9 +29,14 @@ public class StringAndRules
 		ruleField = needle;
 		stringField = null;
 	}
+	
+	public void setValue(StringAndArray<String> value) {
+		this.valueField = value;
+		stringField = null;
+	}
 
 	@Override
 	public String toString() {
-		return String.format("RulesString {%s}", isString() ? getString() : Arrays.toString(getRules()));
+		return String.format("RulesString {%s, value: %s}", isString() ? getString() : Arrays.toString(getRules()), valueField);
 	}
 }

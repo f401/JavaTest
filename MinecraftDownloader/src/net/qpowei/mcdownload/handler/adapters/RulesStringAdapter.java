@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 import net.qpowei.mcdownload.handler.JsonParser;
 import net.qpowei.mcdownload.Tools;
 import net.qpowei.mcdownload.handler.value.VersionIndex;
+import net.qpowei.mcdownload.handler.types.StringAndArray;
 
 public class RulesStringAdapter implements JsonDeserializer<StringAndRules>
 {
@@ -19,11 +20,28 @@ public class RulesStringAdapter implements JsonDeserializer<StringAndRules>
 	public StringAndRules deserialize(JsonElement p1, Type p2, JsonDeserializationContext p3) throws JsonParseException {
 		StringAndRules result = new StringAndRules();
 	    if (p1.isJsonObject()) {
-			result.setRule(Tools.GLOBAL_GSON.fromJson(p1.getAsJsonObject().get("rules").toString(), VersionIndex.Rules[].class));
+			JsonObject obj = p1.getAsJsonObject();
+			
+			result.setRule(Tools.GLOBAL_GSON.fromJson(obj.get("rules"), VersionIndex.Rules[].class));
+			if (obj.has("value")) {
+				result.setValue(sloveValue(obj.get("value")));
+			}
 		} else {
 			result.setString(p1.getAsString());
 		}
 		return result;
+	}
+	
+	private StringAndArray<String> sloveValue(JsonElement element) {
+		StringAndArray<String> result = new StringAndArray<String>();
+		if (element.isJsonPrimitive()) {
+			result.setString(element.getAsString());
+		} else if (element.isJsonArray()) {
+			result.setArray(Tools.GLOBAL_GSON.fromJson(element, String[].class));
+		} else {
+			throw new RuntimeException("Unknow json " + element);
+		}
+        return result;
 	}
 	
 }

@@ -8,6 +8,7 @@ import net.qpowei.mcdownload.handler.adapters.RulesStringAdapter;
 public class Tools
 {
 	public static final Gson GLOBAL_GSON = new GsonBuilder().setPrettyPrinting()
-	.registerTypeAdapter(StringAndRules.class, new RulesStringAdapter()).create();
+	.registerTypeAdapter(StringAndRules.class, new RulesStringAdapter())
+	.create();
 	public static final int BUFFER_SIZE = 1024;
 }
