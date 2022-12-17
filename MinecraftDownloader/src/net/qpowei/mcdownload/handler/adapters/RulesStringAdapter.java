@@ -9,7 +9,7 @@ import net.qpowei.mcdownload.handler.types.StringAndRules;
 import com.google.gson.JsonObject;
 import com.google.gson.GsonBuilder;
 import net.qpowei.mcdownload.handler.JsonParser;
-import net.qpowei.mcdownload.Tools;
+import net.qpowei.mcdownload.MCDConstants;
 import net.qpowei.mcdownload.handler.value.VersionIndex;
 import net.qpowei.mcdownload.handler.types.StringAndArray;
 
@@ -22,7 +22,7 @@ public class RulesStringAdapter implements JsonDeserializer<StringAndRules>
 	    if (p1.isJsonObject()) {
 			JsonObject obj = p1.getAsJsonObject();
 			
-			result.setRule(Tools.GLOBAL_GSON.fromJson(obj.get("rules"), VersionIndex.Rules[].class));
+			result.setRule(MCDConstants.GLOBAL_GSON.fromJson(obj.get("rules"), VersionIndex.Rules[].class));
 			if (obj.has("value")) {
 				result.setValue(sloveValue(obj.get("value")));
 			}
@@ -37,7 +37,7 @@ public class RulesStringAdapter implements JsonDeserializer<StringAndRules>
 		if (element.isJsonPrimitive()) {
 			result.setString(element.getAsString());
 		} else if (element.isJsonArray()) {
-			result.setArray(Tools.GLOBAL_GSON.fromJson(element, String[].class));
+			result.setArray(MCDConstants.GLOBAL_GSON.fromJson(element, String[].class));
 		} else {
 			throw new RuntimeException("Unknow json " + element);
 		}

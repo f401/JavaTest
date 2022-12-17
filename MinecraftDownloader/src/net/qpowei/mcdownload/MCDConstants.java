@@ -5,10 +5,10 @@ import com.google.gson.GsonBuilder;
 import net.qpowei.mcdownload.handler.types.StringAndRules;
 import net.qpowei.mcdownload.handler.adapters.RulesStringAdapter;
 
-public class Tools
+public class MCDConstants
 {
-	public static final Gson GLOBAL_GSON = new GsonBuilder().setPrettyPrinting()
+	public static Gson GLOBAL_GSON = new GsonBuilder().setPrettyPrinting()
 	.registerTypeAdapter(StringAndRules.class, new RulesStringAdapter())
 	.create();
-	public static final int BUFFER_SIZE = 1024;
+	public static int BUFFER_SIZE = 1024;
 }

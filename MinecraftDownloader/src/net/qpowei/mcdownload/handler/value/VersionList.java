@@ -14,13 +14,15 @@ public class VersionList
 	public VersionList.Version versions[];
 	
 	//sha1 不存在! 需要VersionListParser#getSha1获得
-	public static class Version extends URLProperties
+	public static class Version
 	{
 		public String id;//name
 		public String type;//snapshot release old-alpha old-beta
 		
 		public String time;
 		public String releaseTime;
+		
+		public String url;
 		
 		public int complianceLevel;//only for version_manifest_v2
 

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class VersionListResolver
+public class VersionListAnalysiser
 {
 	public static VersionList.Version[] getReleaseList(VersionList ver) {
 		return getListByString(ver, VersionList.TYPE_RELEASE);
@@ -40,12 +40,6 @@ public class VersionListResolver
 			}
 		}
 		return null;
-	}
-	
-	public static String getSha1(VersionList.Version ver) {
-		String sha1 = getSha1(ver.url);
-		ver.sha1 = sha1;
-		return sha1;
 	}
 	
 	public static String getSha1(String url) {

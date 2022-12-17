@@ -29,9 +29,14 @@ public class VersionIndex
 	
 	//与直接放在包里的类不同，直接放在包里的是指assets index(比如1.19.json)文件，
 	//而这里的指的是在VersionIndex(比如1.19.2.json)中的一个元素
-	public static class AssetsIndex extends URLSizedProperties {
+	public static class AssetsIndex {
 		public String id;
 		public int totalSize;
+		
+		public int size;
+		
+		public String url;
+		public String sha1;
 
 		@Override
 		public String toString() {

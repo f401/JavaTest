@@ -1,7 +1,7 @@
 package net.qpowei.mcdownload.handler;
 
 import java.io.File;
-import net.qpowei.mcdownload.Tools;
+import net.qpowei.mcdownload.MCDConstants;
 import net.qpowei.mcdownload.handler.value.VersionIndex;
 import net.qpowei.mcdownload.handler.value.VersionList;
 import net.qpowei.mcdownload.util.FileUtils;
@@ -17,7 +17,7 @@ public class JsonParser
 	}
 	
 	public static VersionList parseVersionList(File version) {
-		 return Tools.GLOBAL_GSON.fromJson(FileUtils.readFileAsString(version), VersionList.class);
+		 return MCDConstants.GLOBAL_GSON.fromJson(FileUtils.readFileAsString(version), VersionList.class);
 	}
 	
 	public static VersionIndex parseVersionIndex(String path) {
@@ -25,7 +25,7 @@ public class JsonParser
 	}
 	
 	public static VersionIndex parseVersionIndex(File file) {
-		return Tools.GLOBAL_GSON.fromJson(FileUtils.readFileAsString(file), VersionIndex.class);
+		return MCDConstants.GLOBAL_GSON.fromJson(FileUtils.readFileAsString(file), VersionIndex.class);
 	}
 	
 	public static AssetsIndex parseAssetsIndex(String path) {
@@ -33,6 +33,6 @@ public class JsonParser
 	}
 	
 	public static AssetsIndex parseAssetsIndex(File path) {
-        return Tools.GLOBAL_GSON.fromJson(FileUtils.readFileAsString(path), AssetsIndex.class);
+        return MCDConstants.GLOBAL_GSON.fromJson(FileUtils.readFileAsString(path), AssetsIndex.class);
 	}
 }

@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.io.BufferedInputStream;
 import java.net.MalformedURLException;
 import java.io.FileOutputStream;
-import net.qpowei.mcdownload.Tools;
+import net.qpowei.mcdownload.MCDConstants;
 
 public class DownloadUtils
 {
@@ -39,7 +39,7 @@ public class DownloadUtils
 			
 			is = http.getInputStream();
 			
-			byte[] buffer = new byte[Tools.BUFFER_SIZE];
+			byte[] buffer = new byte[MCDConstants.BUFFER_SIZE];
 			int len = 0;
 			while((len = is.read(buffer)) > 0) {
 				os.write(buffer, 0, len);

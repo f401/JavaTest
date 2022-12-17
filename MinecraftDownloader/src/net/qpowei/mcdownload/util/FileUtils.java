@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import net.qpowei.mcdownload.Tools;
+import net.qpowei.mcdownload.MCDConstants;
 
 public class FileUtils
 {
@@ -43,7 +43,7 @@ public class FileUtils
 		try {
 			fis = new FileInputStream(file);
 			int len = 0;
-			byte[] buffer = new byte[Tools.BUFFER_SIZE];
+			byte[] buffer = new byte[MCDConstants.BUFFER_SIZE];
 			while((len = fis.read(buffer)) > 0) {
 				baos.write(buffer, 0, len);
 			}
