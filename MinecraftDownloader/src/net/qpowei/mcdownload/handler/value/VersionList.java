@@ -1,14 +1,16 @@
 package net.qpowei.mcdownload.handler.value;
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import net.qpowei.mcdownload.handler.constants.VersionListTypes;
+import net.qpowei.mcdownload.handler.value.VersionList;
+import net.qpowei.mcdownload.handler.ISupportedGetVersionList;
+import net.qpowei.mcdownload.handler.AbstractSupportedGetVersion;
 
-public class VersionList
+public class VersionList extends AbstractSupportedGetVersion<VersionList.Version>
 {
-	public static final String TYPE_OLD_ALPHA = "old_alpha";
-    public static final String TYPE_OLD_BETA = "old_beta";
-    public static final String TYPE_RELEASE = "release";
-    public static final String TYPE_SNAPSHOT = "snapshot";
 	
 	public Map<String, String> latest;//release, snapshot
 	public VersionList.Version versions[];
@@ -37,5 +39,28 @@ public class VersionList
 	public String toString() {
 		return "VersionList { " + "latest: " + latest
 		+ ", Version: " + Arrays.toString(versions) + "}";
+	}
+	
+	
+
+    @Override
+	public VersionList.Version[] getListByString(String needle) {
+		List<VersionList.Version> result = new ArrayList<>();
+		for (VersionList.Version version: this.versions) {
+			if (version.type.equals(needle)) {
+				result.add(version);
+			}
+		}
+		return result.toArray(new VersionList.Version[result.size()]);
+	}
+
+	@Override
+	public VersionList.Version getVersionByString(String name) {
+		for (VersionList.Version version: this.versions) {
+		    if (version.type.equals(name)) {
+				return version;
+			}
+		}
+		return null;
 	}
 }
