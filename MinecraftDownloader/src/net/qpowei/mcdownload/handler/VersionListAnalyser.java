@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class VersionListAnalysiser
+public class VersionListAnalyser
 {
 	public static VersionList.Version[] getReleaseList(VersionList ver) {
 		return getListByString(ver, VersionList.TYPE_RELEASE);

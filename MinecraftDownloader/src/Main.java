@@ -2,7 +2,7 @@ import java.util.*;
 
 import net.qpowei.mcdownload.handler.JsonParser;
 import net.qpowei.mcdownload.handler.value.VersionList;
-import net.qpowei.mcdownload.handler.VersionListAnalysiser;
+import net.qpowei.mcdownload.handler.VersionListAnalyser;
 import net.qpowei.mcdownload.util.DownloadUtils;
 import java.io.File;
 import net.qpowei.mcdownload.util.SHA1Utils;
