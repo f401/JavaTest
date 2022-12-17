@@ -1,9 +1,14 @@
 package net.qpowei.mcdownload.handler.value.analysed;
-import net.qpowei.mcdownload.mirror.IMirrorProvider;
+import java.util.ArrayList;
+import java.util.List;
+import net.qpowei.mcdownload.handler.AbstractSupportedGetVersion;
 import net.qpowei.mcdownload.handler.VersionListAnalyser;
+import net.qpowei.mcdownload.handler.value.VersionList;
+import net.qpowei.mcdownload.mirror.IMirrorProvider;
 
-public class AnalysedVersionList
+public class AnalysedVersionList extends AbstractSupportedGetVersion<AnalysedVersionList.Version>
 {
+	
 	private final String latestRelease;
 	private final String latestSnapShot;
 	private final Version[] versions;
@@ -32,6 +37,27 @@ public class AnalysedVersionList
 
 	public String getLatestSnapShot() {
 		return latestSnapShot;
+	}
+	
+	@Override
+	public AnalysedVersionList.Version[] getListByString(String needle) {
+		List<AnalysedVersionList.Version> result = new ArrayList<>();
+		for (AnalysedVersionList.Version version: this.versions) {
+			if (version.type.equals(needle)) {
+				result.add(version);
+			}
+		}
+		return result.toArray(new AnalysedVersionList.Version[result.size()]);
+	}
+
+	@Override
+	public AnalysedVersionList.Version getVersionByString(String name) {
+		for (AnalysedVersionList.Version version: this.versions) {
+		    if (version.type.equals(name)) {
+				return version;
+			}
+		}
+		return null;
 	}
 	
 	public static class Version extends AbstractSupportedMirrorProperties {
