@@ -4,13 +4,14 @@ import java.util.Map;
 import java.util.Arrays;
 import com.google.gson.annotations.SerializedName;
 import net.qpowei.mcdownload.handler.types.StringAndRules;
+import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionIndex;
 
 public class VersionIndex
 {
 	public Argument arguments;/* since 1.13*/
 	public VersionIndex.AssetsIndex assetIndex;
 	public String assets;
-	public String id;
+	public String id;//version name
 	public int complianceLevel;
 	//这里存放main jar文件
 	public Map<String, URLSizedProperties> downloads;
@@ -145,6 +146,10 @@ public class VersionIndex
 	public String toString() {
 		return String.format("VersionIndex {arguments: %s, assetIndex: %s, assets: %s, id: %s, compilanceLevel: %d, downloads: %s, libraries: %s, javaVersion: %s, mainClass: %s, minimumLauncherVersion: %d, type: %s, time: %s, releaseTime: %s, logging: %s", 
 		    arguments, assetIndex, assets, id, complianceLevel, downloads, libraries, javaVersion, mainClass, minimumLauncherVersion, type, time, releaseTime, logging);
+	}
+	
+	public AnalysedVersionIndex analyse() {
+		return AnalysedVersionIndex.analyse(this);
 	}
 	
 }

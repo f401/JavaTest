@@ -1,13 +1,47 @@
 package net.qpowei.mcdownload.handler.value.analysed;
 
-import net.qpowei.mcdownload.mirror.IMirrorProvider;
+import net.qpowei.mcdownload.mirror.providers.IProviders;
+import net.qpowei.mcdownload.handler.value.AssetsIndex;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import net.qpowei.mcdownload.MCDConstants;
 
-public class AnalysedAssetIndex 
+public class AnalysedAssetIndex implements IMirrorProperties
 {
+	
 	private final AssetInfo objects[];
-
+	private IProviders provider;
+	
 	public AnalysedAssetIndex(AssetInfo[] objects) {
 		this.objects = objects;
+		this.provider = MCDConstants.defaultProviders;
+	}
+	
+	public static AnalysedAssetIndex analyse(AssetsIndex index) {
+		ArrayList<AnalysedAssetIndex.AssetInfo> result = new ArrayList<>(index.objects.size());
+		for (Map.Entry<String, AssetsIndex.AssetsInfo> entry : index.objects.entrySet()) {
+			result.add(new AnalysedAssetIndex.AssetInfo(
+			    entry.getKey(), entry.getValue().hash, entry.getValue().size));
+		}
+		return new AnalysedAssetIndex(result.toArray(new AnalysedAssetIndex.AssetInfo[result.size()]));
+	}
+	
+	@Override
+	public IProviders getMirrorProvider() {
+		return provider;
+	}
+
+	@Override
+	public void setMirrorProvider(IProviders provider) {
+		setMirrorProvider(provider, true);
+	}
+	
+	public void setMirrorProvider(IProviders provider, boolean async) {
+		this.provider = provider;
+        for (AssetInfo info: objects) {
+			info.setMirrorProvider(provider);
+		}
 	}
 	
 	public AssetInfo get(int index) {
@@ -18,7 +52,7 @@ public class AnalysedAssetIndex
 		return objects.length;
 	}
 	
-	public class AssetInfo extends AbstractSupportedMirrorProperties
+	public static class AssetInfo extends AbstractMinecraftMirrorProperties
 	  implements ISupportedSizeProperties
 	{
 
@@ -44,17 +78,17 @@ public class AnalysedAssetIndex
 			return size;
 		}
 
+		/* json文件里不直接包含 */
 		@Override
 		public String getURL() {
-			return provider.getAssetURLBySHA1(sha1);
+			return provider.getURLPath().getAssetsURLBySHA1(sha1);
 		}
 
-		@Override
-		public String getURL(IMirrorProvider provider) {
+		public String getURL(IProviders provider) {
 			if (provider != null)
-				return provider.getAssetURLBySHA1(sha1);
+				return provider.getURLPath().getAssetsURLBySHA1(sha1);
 			else 
-				return this.provider.getAssetURLBySHA1(sha1);//same as getURL()
+				return this.provider.getURLPath().getAssetsURLBySHA1(sha1);//same as getURL()
 		}
 
 	}

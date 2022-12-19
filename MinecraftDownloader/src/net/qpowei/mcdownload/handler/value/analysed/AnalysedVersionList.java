@@ -1,10 +1,12 @@
 package net.qpowei.mcdownload.handler.value.analysed;
+
 import java.util.ArrayList;
 import java.util.List;
 import net.qpowei.mcdownload.handler.AbstractSupportedGetVersion;
 import net.qpowei.mcdownload.handler.VersionListAnalyser;
+import net.qpowei.mcdownload.mirror.providers.IProviders;
 import net.qpowei.mcdownload.handler.value.VersionList;
-import net.qpowei.mcdownload.mirror.IMirrorProvider;
+import net.qpowei.mcdownload.handler.constants.VersionListTypes;
 
 public class AnalysedVersionList extends AbstractSupportedGetVersion<AnalysedVersionList.Version>
 {
@@ -60,7 +62,17 @@ public class AnalysedVersionList extends AbstractSupportedGetVersion<AnalysedVer
 		return null;
 	}
 	
-	public static class Version extends AbstractSupportedMirrorProperties {
+	public static AnalysedVersionList analyse(VersionList src) {
+		ArrayList<Version> versions = new ArrayList<>(src.versions.length);
+		for (VersionList.Version entry : src.versions) {
+			versions.add(new Version(entry.id, entry.url, entry.type, entry.time, entry.releaseTime, entry.complianceLevel));
+		}
+		return new AnalysedVersionList(src.latest.get(VersionListTypes.TYPE_RELEASE), 
+		    src.latest.get(VersionListTypes.TYPE_SNAPSHOT), 
+		    versions.toArray(new Version[versions.size()]));
+	}
+	
+	public static class Version extends AbstractMinecraftMirrorProperties {
 
 		private final String name, url;
 		private final String type;
@@ -108,13 +120,12 @@ public class AnalysedVersionList extends AbstractSupportedGetVersion<AnalysedVer
 
 		@Override
 		public String getURL() {
-			return provider.injectMainJarURL(url);
+			return provider.getInjector().injectJsonIndexesURL(url);
 		}
 		
-		@Override
-		public String getURL(IMirrorProvider provider) {
-			return provider != null ? provider.injectMainJarURL(url) : 
-			    this.provider.injectMainJarURL(url);//same as getURL
+		public String getURL(IProviders provider) {
+			return provider != null ? provider.getInjector().injectJsonIndexesURL(url) : 
+			    this.provider.getInjector().injectJsonIndexesURL(url);//same as getURL
 		}
 		
 	}

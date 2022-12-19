@@ -11,6 +11,25 @@ import net.qpowei.mcdownload.MCDConstants;
 
 public class FileUtils
 {
+	public static String fixSeparator(String needle) {
+		return needle.endsWith(File.separator) ? needle : needle + File.separator;
+	}
+	
+	public static boolean makeParentDir(String needle) {
+		return makeParentDir(new File(needle));
+	}
+	
+	public static boolean makeParentDir(File needle) {
+		if (needle != null) {
+			File parentFile = needle.getParentFile();
+			if (!parentFile.exists()) {
+				return parentFile.mkdirs();
+			}
+			return true;
+		}
+		return false;
+	}
+	
 	public static String readFileAsString(String path) {
 		return readFileAsString(new File(path));
 	}

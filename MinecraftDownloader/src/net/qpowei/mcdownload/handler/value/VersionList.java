@@ -8,6 +8,7 @@ import net.qpowei.mcdownload.handler.constants.VersionListTypes;
 import net.qpowei.mcdownload.handler.value.VersionList;
 import net.qpowei.mcdownload.handler.ISupportedGetVersionList;
 import net.qpowei.mcdownload.handler.AbstractSupportedGetVersion;
+import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionList;
 
 public class VersionList extends AbstractSupportedGetVersion<VersionList.Version>
 {
@@ -62,5 +63,9 @@ public class VersionList extends AbstractSupportedGetVersion<VersionList.Version
 			}
 		}
 		return null;
+	}
+	
+	public AnalysedVersionList analyse() {
+		return AnalysedVersionList.analyse(this);
 	}
 }
