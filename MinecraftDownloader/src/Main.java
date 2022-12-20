@@ -28,13 +28,14 @@ public class Main {
 
 				@Override
 				public boolean onServerReturnWrongCode(String input, File to, int code, String msg) {
+					System.out.println(msg);
 					return false;
 				}
 
 				@Override
 				public void onDownload(String input, File to, long curr, long total, double speeding) {
 					if (curr / total == 1) {
-						System.out.println(to + " finished");
+						System.out.println(input + " finished");
 					}
 				}
 
@@ -47,13 +48,14 @@ public class Main {
 
 				@Override
 				public boolean onServerReturnWrongCode(String input, File to, int code, String msg) {
+					System.out.println(msg);
 					return false;
 				}
 
 				@Override
 				public void onDownload(String input, File to, long curr, long total, double speeding) {
 					if (curr / total == 1) {
-						System.out.println(to + " finished");
+						System.out.println(input + " finished");
 					}
 				}
 
@@ -66,13 +68,14 @@ public class Main {
 
 				@Override
 				public boolean onServerReturnWrongCode(String input, File to, int code, String msg) {
+					System.out.println(msg);
 					return false;
 				}
 
 				@Override
 				public void onDownload(String input, File to, long curr, long total, double speeding) {
 					if (curr / total == 1) {
-						System.out.println(to + " finished");
+						System.out.println(input + " finished");
 					}
 				}
 

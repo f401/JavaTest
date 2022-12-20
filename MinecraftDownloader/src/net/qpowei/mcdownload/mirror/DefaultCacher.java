@@ -64,10 +64,10 @@ public class DefaultCacher implements ICacher
 	public AnalysedVersionIndex.DependentLibrary[] getShouldDownloadLibraries(VersionProfile profile, AnalysedVersionIndex.DependentLibrary[] src) {
 		if (new File(profile.getRootDir()).exists()) {
 			ArrayList<AnalysedVersionIndex.DependentLibrary> result = new ArrayList<>();
-			for (int i = 0; i < src.length; ++i) {
-			    File file = new File(urlProvider.getURLPath().getLibrarySavePath(profile, src[i]));
-				if (!(file.exists() && SHA1Utils.compareFileAndString(file, src[i].getSha1()))) {
-					result.add(src[i]);
+			for (AnalysedVersionIndex.DependentLibrary entry:src) {
+			    File file = new File(urlProvider.getURLPath().getLibrarySavePath(profile, entry));
+				if (!(file.exists() && SHA1Utils.compareFileAndString(file, entry.getSha1()))) {
+					result.add(entry);
 				}
 			}
 			return result.toArray(new AnalysedVersionIndex.DependentLibrary[result.size()]);
