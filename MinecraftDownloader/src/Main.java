@@ -22,7 +22,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		MCDConstants.defaultProviders.setMirror(DefaultMirrors.BMCLAPI);
 		
-		new MinecraftDownloader(new VersionProfile("1.16.5", "1.16.5", "/sdcard/MinecraftDownloader", false), 
+		new MinecraftDownloader(new VersionProfile("hh", "1.16.5", "/sdcard/MinecraftDownloader", false), 
 		new MultiFileDownloader(), 
 		    new MultiFileDownloader.DownloadEvent() {
 

@@ -78,7 +78,7 @@ public class DefaultURLPath implements IURLPath
 	
 	@Override
 	public String getAssetsSavePath(VersionProfile profile, String sha1) {
-		return getAssetsDir(profile) + sha1.substring(0, 2) + File.separator + sha1;
+		return getAssetsDir(profile) + File.separator + "objects" + File.separator + sha1.substring(0, 2) + File.separator + sha1;
 	}
 	
 	@Override
