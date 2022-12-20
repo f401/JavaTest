@@ -55,7 +55,7 @@ public class AnalysedVersionList extends AbstractSupportedGetVersion<AnalysedVer
 	@Override
 	public AnalysedVersionList.Version getVersionByString(String name) {
 		for (AnalysedVersionList.Version version: this.versions) {
-		    if (version.type.equals(name)) {
+		    if (version.name.equals(name)) {
 				return version;
 			}
 		}

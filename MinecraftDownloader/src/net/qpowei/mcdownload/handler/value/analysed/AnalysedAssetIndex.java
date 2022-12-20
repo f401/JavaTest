@@ -77,7 +77,7 @@ public class AnalysedAssetIndex implements IMirrorProperties
 		public int getSize() {
 			return size;
 		}
-
+		
 		/* json文件里不直接包含 */
 		@Override
 		public String getURL() {

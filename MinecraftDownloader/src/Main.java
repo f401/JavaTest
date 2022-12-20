@@ -10,16 +10,78 @@ import com.google.gson.GsonBuilder;
 import net.qpowei.mcdownload.MCDConstants;
 import net.qpowei.mcdownload.mirror.DefaultMirrors;
 import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionIndex;
+import net.qpowei.mcdownload.util.MultiFileDownloader;
+import java.io.IOException;
+import net.qpowei.mcdownload.MinecraftDownloader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import net.qpowei.mcdownload.VersionProfile;
 
 public class Main {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		MCDConstants.defaultProviders.setMirror(DefaultMirrors.BMCLAPI);
 		
-		System.out.println(JsonParser.parseVersionIndex("/storage/emulated/0/1.19.2.json").analyse().getMainJar(AnalysedVersionIndex.MINECRAFT_CLIENT).getSha1());
-		System.out.println(JsonParser.parseAssetsIndex("/storage/emulated/0/1.19.json").analyse().get(0).getURL());
-		System.out.println("Finish");
-	    
+		new MinecraftDownloader(new VersionProfile("1.16.5", "1.16.5", "/sdcard/MinecraftDownloader", false), 
+		new MultiFileDownloader(), 
+		    new MultiFileDownloader.DownloadEvent() {
+
+				@Override
+				public boolean onServerReturnWrongCode(String input, File to, int code, String msg) {
+					return false;
+				}
+
+				@Override
+				public void onDownload(String input, File to, long curr, long total, double speeding) {
+					if (curr / total == 1) {
+						System.out.println(to + " finished");
+					}
+				}
+
+				@Override
+				public void onDownloadFailed(Throwable err, String inputUrl, File to, int downloadedCount, int maxRetry) {
+					err.printStackTrace();
+				}
+			}
+			, new MultiFileDownloader.DownloadEvent() {
+
+				@Override
+				public boolean onServerReturnWrongCode(String input, File to, int code, String msg) {
+					return false;
+				}
+
+				@Override
+				public void onDownload(String input, File to, long curr, long total, double speeding) {
+					if (curr / total == 1) {
+						System.out.println(to + " finished");
+					}
+				}
+
+				@Override
+				public void onDownloadFailed(Throwable err, String inputUrl, File to, int downloadedCount, int maxRetry) {
+					err.printStackTrace();
+				}
+			},
+			new MultiFileDownloader.DownloadEvent() {
+
+				@Override
+				public boolean onServerReturnWrongCode(String input, File to, int code, String msg) {
+					return false;
+				}
+
+				@Override
+				public void onDownload(String input, File to, long curr, long total, double speeding) {
+					if (curr / total == 1) {
+						System.out.println(to + " finished");
+					}
+				}
+
+				@Override
+				public void onDownloadFailed(Throwable err, String inputUrl, File to, int downloadedCount, int maxRetry) {
+					err.printStackTrace();
+				}
+			}).downloadGame();
+		System.out.println("download finish");
     }
     
 }

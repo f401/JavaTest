@@ -51,12 +51,16 @@ public class VersionIndex
 		public Rules[] rules;
 		
 		public static class LibrarayDownload {
-			public URLSizedProperties artifact;
+			public Artifact artifact;
 
 			@Override
 			public String toString() {
 				return String.format("LibraryDownload {url: %s, size: %d, sha1: %s}", artifact.url
 				, artifact.size, artifact.sha1);
+			}
+			
+			public static class Artifact extends URLSizedProperties {
+				public String path;
 			}
 		}
 

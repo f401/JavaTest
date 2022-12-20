@@ -6,10 +6,10 @@ public class DefaultMirrors
 	   new DefaultMirror(
 	   "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json",
 	   "https://resources.download.minecraft.net/",
-	   "^(https://)libraries\\.minecraft\\.net/",
+	   "https://libraries.minecraft.net/",
 	   "^(https://)((piston\\-data\\.mojang\\.com/)|(launcher\\.mojang\\.com/))",
 	   "^(https://)((piston\\-meta\\.mojang\\.com/)|(launchermeta\\.mojang\\.com/))",
-	   "^(https://)files\\.minecraftforge\\.net/maven/", 
+	   "https://files.minecraftforge.net/maven/", 
 	   "Default"
 	);
 	public static final DefaultMirror BMCLAPI = new DefaultMirror(

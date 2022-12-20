@@ -11,11 +11,11 @@ public class DefaultProviders implements IProviders
 	private IURLPath urlPath;
 	
 	private DefaultProviders() {
-		this(null, null);
+		this(null, null, null);
 	}
 	
-	public DefaultProviders(IInjector injector, IURLPath path) {
-		this(new DefaultCacher(), injector, DefaultMirrors.MOJANG, path);
+	public DefaultProviders(ICacher cacher, IInjector injector, IURLPath path) {
+		this(cacher, injector, DefaultMirrors.MOJANG, path);
 	}
 	
 	public DefaultProviders(ICacher cacher, IInjector injector, IMirror mirror, IURLPath urlPath) {
@@ -31,6 +31,10 @@ public class DefaultProviders implements IProviders
 	
 	public DefaultURLPath newDefaultURLPath() {
 		return new DefaultURLPath(this);
+	}
+	
+	public DefaultCacher newDefaultCacher() {
+		return new DefaultCacher(this);
 	}
 	
 	public void setCacher(ICacher cacher) {
@@ -73,6 +77,7 @@ public class DefaultProviders implements IProviders
 		DefaultProviders result = new DefaultProviders();
 		result.setInjector(result.newDefaultInjector());
 		result.setURLPath(result.newDefaultURLPath());
+		result.setCacher(result.newDefaultCacher());
 		return result;
 	}
 	

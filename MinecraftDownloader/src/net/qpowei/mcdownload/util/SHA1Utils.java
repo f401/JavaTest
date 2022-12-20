@@ -12,7 +12,6 @@ public class SHA1Utils
 			MessageDigest digest = MessageDigest.getInstance("SHA-1");
 			digest.update(FileUtils.readFileAsBytes(file));
 			String hex = new BigInteger(1, digest.digest()).toString(16);
-			System.out.println(hex);
 			return hex.equalsIgnoreCase(sha1);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();

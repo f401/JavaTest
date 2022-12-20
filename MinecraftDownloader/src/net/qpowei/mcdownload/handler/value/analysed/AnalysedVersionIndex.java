@@ -275,17 +275,22 @@ public class AnalysedVersionIndex implements IMirrorProperties
 
 		private final String name;
 		private final VersionIndex.Rules[] rules;
-		private final String url, sha1;
+		private final String url, sha1, path;
 		private final int size;
 
-		public DependentLibrary(String name, VersionIndex.Rules[] rules, String url, String sha1, int size) {
+		public DependentLibrary(String name, VersionIndex.Rules[] rules, String url, String sha1, int size, String path) {
 			this.name = name;
 			this.rules = rules;
 			this.url = url;
 			this.sha1 = sha1;
 			this.size = size;
+			this.path = path;
 		}
 
+		public String getPath() {
+			return path;
+		}
+		
 		public String getName() {
 			return name;
 		}
@@ -312,7 +317,7 @@ public class AnalysedVersionIndex implements IMirrorProperties
 			ArrayList<AnalysedVersionIndex.DependentLibrary> result = new ArrayList<>();
 			for (VersionIndex.DependentLibrary entry : src) {
 				result.add(new DependentLibrary(entry.name, entry.rules, 
-				    entry.downloads.artifact.url, entry.downloads.artifact.sha1, entry.downloads.artifact.size));
+				    entry.downloads.artifact.url, entry.downloads.artifact.sha1, entry.downloads.artifact.size, entry.downloads.artifact.path));
 			}
 			return result.toArray(new DependentLibrary[result.size()]);
 		}
