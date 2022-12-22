@@ -15,6 +15,10 @@ public class FileUtils
 		return needle.endsWith(File.separator) ? needle : needle + File.separator;
 	}
 	
+	public static String unixPath2windows(String src) {
+		return src.replaceAll("/", "\\");
+	}
+	
 	public static boolean makeParentDir(String needle) {
 		return makeParentDir(new File(needle));
 	}

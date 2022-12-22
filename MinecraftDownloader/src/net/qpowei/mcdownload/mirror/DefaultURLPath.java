@@ -6,6 +6,7 @@ import net.qpowei.mcdownload.mirror.providers.IMirrorProvider;
 import net.qpowei.mcdownload.util.FileUtils;
 import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionIndex.DependentLibrary;
 import net.qpowei.mcdownload.VersionProfile;
+import net.qpowei.mcdownload.util.OperatingSystem;
 
 public class DefaultURLPath implements IURLPath
 {
@@ -46,24 +47,11 @@ public class DefaultURLPath implements IURLPath
 	public String getMainJarSavePathByProfile(VersionProfile profile) {
 		return getVersionDirByProfile(profile) + profile.getVersionName() + ".jar";
 	}
-	
-	@Override
-	public String getLibraryPathByName(String src) {
-		String[] list = src.split(":");
-		return list[0].replaceAll("\\.", File.separator) + File.separator +
-		    list[1] + File.separator + 
-			list[2] + File.separator + 
-			list[1] + "-" + list[2] + ".jar";
-	}
-	
+
 	@Override
 	public String getLibrarySavePath(VersionProfile profile, AnalysedVersionIndex.DependentLibrary src) {
-		return getLibrarySavePathByName(profile, src.getName());
-	}
-	
-	@Override
-	public String getLibrarySavePathByName(VersionProfile profile, String name) {
-		return getLibraryDir(profile) + getLibraryPathByName(name);
+		return getLibraryDir(profile) + (
+		    OperatingSystem.isWindows() ? FileUtils.unixPath2windows(src.getPath()) : src.getPath());
 	}
 	
 	@Override

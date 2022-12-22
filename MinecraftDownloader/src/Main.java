@@ -16,13 +16,21 @@ import net.qpowei.mcdownload.MinecraftDownloader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import net.qpowei.mcdownload.VersionProfile;
+import net.qpowei.mcdownload.handler.value.VersionIndex;
+import net.qpowei.mcdownload.util.RulesUtils;
 
 public class Main {
 	
 	public static void main(String[] args) throws IOException {
 		MCDConstants.defaultProviders.setMirror(DefaultMirrors.BMCLAPI);
 		
-		new MinecraftDownloader(new VersionProfile("hh", "1.16.5", "/sdcard/MinecraftDownloader", false), 
+		VersionIndex vi = JsonParser.parseVersionIndex("/sdcard/MinecraftDownloader/versions/1.16.5/1.16.5.json");
+		
+		for (int i = 0; i < vi.libraries.length; ++i) {
+			if (vi.libraries[i].rules != null && vi.libraries[i].rules.length > 1) 
+			    System.out.println(RulesUtils.shouldDownloadLibrary(vi.libraries[i].rules));
+		}
+		/*new MinecraftDownloader(new VersionProfile("hh", "1.16.5", "/sdcard/MinecraftDownloader", false), 
 		new MultiFileDownloader(), 
 		    new MultiFileDownloader.DownloadEvent() {
 
@@ -84,7 +92,7 @@ public class Main {
 					err.printStackTrace();
 				}
 			}).downloadGame();
-		System.out.println("download finish");
+		System.out.println("download finish");*/
     }
     
 }

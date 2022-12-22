@@ -8,8 +8,7 @@ public interface IURLPath
 	
 	public String getAssetsSavePath(VersionProfile profile, String sha1);
 	public String getAssetsDir(VersionProfile root);
-	
-	public String getLibraryPathByName(String name);
+
 	public String getLibraryDir(VersionProfile root);
 	public String getLibrarySavePath(VersionProfile profile, AnalysedVersionIndex.DependentLibrary src);
 	
@@ -18,7 +17,4 @@ public interface IURLPath
 	
 	public String getAssetsIndexSavePathByProfile(VersionProfile profile);
 	public String getVersionIndexSavePathByProfile(VersionProfile profile);
-	
-	
-	public String getLibrarySavePathByName(VersionProfile profile, String name);
 }

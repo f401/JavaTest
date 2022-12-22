@@ -106,9 +106,6 @@ public class VersionIndex
 	
 	public static class Rules {
 		
-		public static final String ACTION_ALLOW = "allow";
-		public static final String ACTION_DISALLOW = "disallow";
-		
         public String action/*allow disallow*/;
 		public OS os;
 		//since 1.13, in arguments
