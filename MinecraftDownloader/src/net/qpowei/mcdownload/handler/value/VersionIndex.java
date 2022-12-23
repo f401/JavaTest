@@ -5,6 +5,7 @@ import java.util.Arrays;
 import com.google.gson.annotations.SerializedName;
 import net.qpowei.mcdownload.handler.types.StringAndRules;
 import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionIndex;
+import java.nio.channels.SeekableByteChannel;
 
 public class VersionIndex
 {
@@ -47,12 +48,16 @@ public class VersionIndex
 	
 	public static class DependentLibrary {
 		public String name;
-		public LibrarayDownload downloads;
+		public LibraryDownload downloads;
 		public Rules[] rules;
 		
-		public static class LibrarayDownload {
+		public Extract extract;
+		public Natives natives;
+		
+		public static class LibraryDownload {
 			public Artifact artifact;
-
+            public Map<String, Artifact> classifiers;
+			
 			@Override
 			public String toString() {
 				return String.format("LibraryDownload {url: %s, size: %d, sha1: %s}", artifact.url
@@ -62,6 +67,16 @@ public class VersionIndex
 			public static class Artifact extends URLSizedProperties {
 				public String path;
 			}
+		}
+		
+		public static class Extract {
+			public String[] exclude;
+		}
+
+		public static class Natives {
+			public String linux;
+			public String windows;
+			public String osx;
 		}
 
 		@Override

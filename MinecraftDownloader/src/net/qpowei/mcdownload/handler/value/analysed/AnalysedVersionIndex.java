@@ -8,6 +8,7 @@ import net.qpowei.mcdownload.handler.value.URLSizedProperties;
 import net.qpowei.mcdownload.handler.value.VersionIndex;
 import net.qpowei.mcdownload.mirror.providers.IProviders;
 import net.qpowei.mcdownload.MCDConstants;
+import net.qpowei.mcdownload.util.OperatingSystem;
 
 public class AnalysedVersionIndex implements IMirrorProperties
 {
@@ -277,14 +278,16 @@ public class AnalysedVersionIndex implements IMirrorProperties
 		private final VersionIndex.Rules[] rules;
 		private final String url, sha1, path;
 		private final int size;
+		private final Natives natives;
 
-		public DependentLibrary(String name, VersionIndex.Rules[] rules, String url, String sha1, int size, String path) {
+		public DependentLibrary(String name, VersionIndex.Rules[] rules, String url, String sha1, int size, String path, Natives natives) {
 			this.name = name;
 			this.rules = rules;
 			this.url = url;
 			this.sha1 = sha1;
 			this.size = size;
 			this.path = path;
+			this.natives = natives;
 		}
 
 		public String getPath() {
@@ -313,11 +316,150 @@ public class AnalysedVersionIndex implements IMirrorProperties
 			return size;
 		}
 		
+		public boolean hasNative() {
+			return natives != null;
+		}
+		
+		public boolean hasArtifact() {
+			return url != null;
+		}
+		
+		public Natives getNatives() {
+			return natives;
+		}
+		
+		public static class Natives {
+			private final Map<String, Native> natives;
+			private final Extract extract;
+			private final String linux, windows, osx;
+
+			public Natives(Map<String, Native> natives, Extract extract, String linux, String windows, String osx) {
+				this.natives = natives;
+				this.extract = extract;
+				this.linux = linux;
+				this.windows = windows;
+				this.osx = osx;
+			}
+
+			public Extract getExtract() {
+				return extract;
+			}
+			
+			public boolean shouldExtract(String name) {
+				if (extract != null) {
+					return extract.shouldExtract(name);
+				}
+				return true;
+			}
+			
+			public Native getLinuxNative() {
+				if (linux != null)
+					return natives.get(linux);
+				return null;
+			}
+			
+			public Native getWindowsNative() {
+				if (windows != null)
+					return natives.get(windows);
+				return null;
+			}
+			
+			public Native getOsxNative() {
+				if (osx != null)
+					return natives.get(osx);
+				return null;
+			}
+			
+			public Native getCurrentOSNative() {
+				switch (OperatingSystem.CURRENT_OS) {
+					case OperatingSystem.LINUX:
+						return getLinuxNative();
+					case OperatingSystem.WINDOWS:
+						return getWindowsNative();
+					case OperatingSystem.OSX:
+						return getOsxNative();
+					default:
+					    throw new RuntimeException("Unknow OS: " + OperatingSystem.CURRENT_OS);
+				}
+			}
+			
+			public static class Native extends AbstractMinecraftMirrorProperties {
+				private final String url, sha1, path;
+				private final int size;
+
+				public Native(String url, String sha1, int size, String path) {
+					this.url = url;
+					this.sha1 = sha1;
+					this.size = size;
+					this.path = path;
+				}
+
+				public int getSize() {
+					return size;
+				}
+				
+				public String getPath() {
+					return path;
+				}
+
+				@Override
+				public String getSha1() {
+					return sha1;
+				}
+
+				@Override
+				public String getURL() {
+					return provider.getInjector().injectLibraryURL(url);
+				}
+			}
+			
+			public static class Extract {
+				private final String[] exclude;
+
+				public Extract(String[] exclude) {
+					this.exclude = exclude;
+				}
+				
+				public static Extract analyse(VersionIndex.DependentLibrary.Extract src) {
+					return new Extract(src.exclude);
+				}
+				
+				public boolean shouldExtract(String name) {
+					for (String e : exclude) {
+						if (e.equalsIgnoreCase(name))
+							return false;
+					}
+					return true;
+				}
+			}
+			
+			public static Natives analyse(VersionIndex.DependentLibrary src) {
+				if (src.downloads.classifiers != null) {
+			    	Map<String, Native> natives = new HashMap<>(src.downloads.classifiers.size());
+				    for (Map.Entry<String, VersionIndex.DependentLibrary.LibraryDownload.Artifact> entry: src.downloads.classifiers.entrySet()) {
+					    natives.put(entry.getKey(), new Native(entry.getValue().url, entry.getValue().sha1, entry.getValue().size, entry.getValue().path));
+				    }
+					return new Natives(natives, Extract.analyse(src.extract), src.natives.linux, src.natives.windows, src.natives.osx);
+				}
+				return null;
+			}
+		}
+		
 		public static AnalysedVersionIndex.DependentLibrary[] analyse(VersionIndex.DependentLibrary[] src) {
 			ArrayList<AnalysedVersionIndex.DependentLibrary> result = new ArrayList<>();
 			for (VersionIndex.DependentLibrary entry : src) {
+				String artifactURL = null, artifactSHA1 = null, artifactPath = null;
+				int artifactSize = 0;
+				
+				if (entry.downloads.artifact != null) {
+					artifactURL = entry.downloads.artifact.url;
+					artifactSHA1 = entry.downloads.artifact.sha1;
+					artifactSize = entry.downloads.artifact.size;
+					artifactPath = entry.downloads.artifact.path;
+				}
+				
 				result.add(new DependentLibrary(entry.name, entry.rules, 
-				    entry.downloads.artifact.url, entry.downloads.artifact.sha1, entry.downloads.artifact.size, entry.downloads.artifact.path));
+				    artifactURL, artifactSHA1, artifactSize, artifactPath, Natives.analyse(entry)));
 			}
 			return result.toArray(new DependentLibrary[result.size()]);
 		}

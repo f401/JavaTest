@@ -63,7 +63,12 @@ public class MinecraftDownloader {
 	public void downloadLibraries(AnalysedVersionIndex.DependentLibrary[] libs) {
 		libs = providers.getCacher().getShouldDownloadLibraries(profile, libs);
 		for (AnalysedVersionIndex.DependentLibrary entry: libs) {
-			downloader.addIntoDownloadList(entry.getURL(), providers.getURLPath().getLibrarySavePath(profile, entry));
+			if (entry.hasArtifact()) {
+			    downloader.addIntoDownloadList(entry.getURL(), providers.getURLPath().getLibrarySavePath(profile, entry));
+			} 
+			if (entry.hasNative() && providers.getCacher().shouldDownloadNativeLibrary(profile, entry.getNatives().getCurrentOSNative())) {
+				downloader.addIntoDownloadList(entry.getNatives().getCurrentOSNative().getURL(), providers.getURLPath().getLibrarySavePath(profile, entry));
+			}
 		}
 		downloader.startMultiThreadDownloadBlocking();
 		downloader.waitUntilDownloadFinish();
@@ -112,6 +117,7 @@ public class MinecraftDownloader {
 		    list = JsonParser.parseVersionList(versionList).analyse();
 		} catch (Exception e) {
 			downloadVersionList(versionList);
+			e.printStackTrace();
 			list = JsonParser.parseVersionList(versionList).analyse();
 		}
 		File verIndex = downloadVersionIndex(list.getVersionByString(profile.getVersionName()));

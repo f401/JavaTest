@@ -2,7 +2,7 @@ package net.qpowei.mcdownload.util;
 
 public class OperatingSystem
 {
-	public static final String CURRENT_OS = System.getProperty("os.name");
+	public static final String CURRENT_OS = System.getProperty("os.name").toLowerCase();
 	
 	public static final String LINUX = "linux";
 	public static final String WINDOWS = "windows";

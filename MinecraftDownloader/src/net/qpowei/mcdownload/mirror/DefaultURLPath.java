@@ -10,6 +10,7 @@ import net.qpowei.mcdownload.util.OperatingSystem;
 
 public class DefaultURLPath implements IURLPath
 {
+
 	public static final String ASSETS_DIR = "assets" + File.separator;
 	public static final String LIBRARY_DIR = "libraries" + File.separator;
 	public static final String VERSION_DIR = "versions" + File.separator;
@@ -27,7 +28,19 @@ public class DefaultURLPath implements IURLPath
 	public IMirrorProvider getProvider() {
 		return provider;
 	}
+	
 
+	@Override
+	public String getNativeLibrarySavePath(VersionProfile profile, AnalysedVersionIndex.DependentLibrary.Natives.Native src) {
+		return getLibraryDir(profile) + (
+		    OperatingSystem.isWindows() ? FileUtils.unixPath2windows(src.getPath()) : src.getPath());
+	}
+
+	@Override
+	public String getNativeExtractPath(VersionProfile profile) {
+		return getVersionDirByProfile(profile) + "natives" + File.separator;
+	}
+	
 	@Override
 	public String getVersionDirByProfile(VersionProfile profile) {
 		return FileUtils.fixSeparator(profile.getRootDir()) + VERSION_DIR + profile.getName() + File.separator;

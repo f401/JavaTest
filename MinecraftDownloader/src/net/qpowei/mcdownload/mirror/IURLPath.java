@@ -11,10 +11,13 @@ public interface IURLPath
 
 	public String getLibraryDir(VersionProfile root);
 	public String getLibrarySavePath(VersionProfile profile, AnalysedVersionIndex.DependentLibrary src);
+	public String getNativeLibrarySavePath(VersionProfile profile, AnalysedVersionIndex.DependentLibrary.Natives.Native src);
 	
 	public String getMainJarSavePathByProfile(VersionProfile profile);
 	public String getVersionDirByProfile(VersionProfile profile);
 	
 	public String getAssetsIndexSavePathByProfile(VersionProfile profile);
 	public String getVersionIndexSavePathByProfile(VersionProfile profile);
+	
+	public String getNativeExtractPath(VersionProfile profile);
 }

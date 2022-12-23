@@ -8,10 +8,16 @@ import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionIndex;
 import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionList;
 import net.qpowei.mcdownload.mirror.providers.IURLPathProvider;
 import net.qpowei.mcdownload.util.SHA1Utils;
+import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionIndex.DependentLibrary.Natives.Native;
 
 public class DefaultCacher implements ICacher
 {
 
+	@Override
+	public boolean shouldDownloadNativeLibrary(VersionProfile profile, AnalysedVersionIndex.DependentLibrary.Natives.Native nat) {
+	    File path = new File(urlProvider.getURLPath().getNativeLibrarySavePath(profile, nat));
+		return !(path.exists() && SHA1Utils.compareFileAndString(path, nat.getSha1()));
+	}
 	
 	private IURLPathProvider urlProvider;
 
@@ -65,10 +71,12 @@ public class DefaultCacher implements ICacher
 		if (new File(profile.getRootDir()).exists()) {
 			ArrayList<AnalysedVersionIndex.DependentLibrary> result = new ArrayList<>();
 			for (AnalysedVersionIndex.DependentLibrary entry:src) {
-			    File file = new File(urlProvider.getURLPath().getLibrarySavePath(profile, entry));
-				if (!(file.exists() && SHA1Utils.compareFileAndString(file, entry.getSha1()))) {
-					result.add(entry);
-				}
+				if (entry.hasArtifact()) {
+			        File file = new File(urlProvider.getURLPath().getLibrarySavePath(profile, entry));
+			    	if (!(file.exists() && SHA1Utils.compareFileAndString(file, entry.getSha1()))) {
+				    	result.add(entry);
+				    }
+			    }
 			}
 			return result.toArray(new AnalysedVersionIndex.DependentLibrary[result.size()]);
 		}

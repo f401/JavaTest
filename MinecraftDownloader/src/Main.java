@@ -24,13 +24,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		MCDConstants.defaultProviders.setMirror(DefaultMirrors.BMCLAPI);
 		
-		VersionIndex vi = JsonParser.parseVersionIndex("/sdcard/MinecraftDownloader/versions/1.16.5/1.16.5.json");
-		
-		for (int i = 0; i < vi.libraries.length; ++i) {
-			if (vi.libraries[i].rules != null && vi.libraries[i].rules.length > 1) 
-			    System.out.println(RulesUtils.shouldDownloadLibrary(vi.libraries[i].rules));
-		}
-		/*new MinecraftDownloader(new VersionProfile("hh", "1.16.5", "/sdcard/MinecraftDownloader", false), 
+		new MinecraftDownloader(new VersionProfile("1.9", "1.9", "/sdcard/MinecraftDownloader", false), 
 		new MultiFileDownloader(), 
 		    new MultiFileDownloader.DownloadEvent() {
 
@@ -63,7 +57,7 @@ public class Main {
 				@Override
 				public void onDownload(String input, File to, long curr, long total, double speeding) {
 					if (curr / total == 1) {
-						System.out.println(input + " finished");
+						System.out.println(to + " finished");
 					}
 				}
 
@@ -92,7 +86,7 @@ public class Main {
 					err.printStackTrace();
 				}
 			}).downloadGame();
-		System.out.println("download finish");*/
+		System.out.println("download finish");
     }
     
 }
