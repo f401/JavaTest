@@ -9,9 +9,16 @@ import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionList;
 import net.qpowei.mcdownload.mirror.providers.IURLPathProvider;
 import net.qpowei.mcdownload.util.SHA1Utils;
 import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionIndex.DependentLibrary.Natives.Native;
+import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionIndex.DependentLibrary;
 
 public class DefaultCacher implements ICacher
 {
+
+	@Override
+	public boolean shouldDownloadLibrary(VersionProfile profile, AnalysedVersionIndex.DependentLibrary src) {
+		File path = new File(urlProvider.getURLPath().getLibrarySavePath(profile, src));
+		return !(path.exists() && SHA1Utils.compareFileAndString(path, src.getSha1()));
+	}
 
 	@Override
 	public boolean shouldDownloadNativeLibrary(VersionProfile profile, AnalysedVersionIndex.DependentLibrary.Natives.Native nat) {
@@ -72,11 +79,10 @@ public class DefaultCacher implements ICacher
 			ArrayList<AnalysedVersionIndex.DependentLibrary> result = new ArrayList<>();
 			for (AnalysedVersionIndex.DependentLibrary entry:src) {
 				if (entry.hasArtifact()) {
-			        File file = new File(urlProvider.getURLPath().getLibrarySavePath(profile, entry));
-			    	if (!(file.exists() && SHA1Utils.compareFileAndString(file, entry.getSha1()))) {
+			    	if (shouldDownloadLibrary(profile, entry)) {
 				    	result.add(entry);
 				    }
-			    }
+			    } 
 			}
 			return result.toArray(new AnalysedVersionIndex.DependentLibrary[result.size()]);
 		}

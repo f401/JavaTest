@@ -24,7 +24,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		MCDConstants.defaultProviders.setMirror(DefaultMirrors.BMCLAPI);
 		
-		new MinecraftDownloader(new VersionProfile("1.9", "1.9", "/sdcard/MinecraftDownloader", false), 
+		new MinecraftDownloader(new VersionProfile("1.19.2", "1.19.2", "/sdcard/MinecraftDownloader", false), 
 		new MultiFileDownloader(), 
 		    new MultiFileDownloader.DownloadEvent() {
 
@@ -85,7 +85,7 @@ public class Main {
 				public void onDownloadFailed(Throwable err, String inputUrl, File to, int downloadedCount, int maxRetry) {
 					err.printStackTrace();
 				}
-			}).downloadGame();
+			}).downloadGame().extractNatives();
 		System.out.println("download finish");
     }
     

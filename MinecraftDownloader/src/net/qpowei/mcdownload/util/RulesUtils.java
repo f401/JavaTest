@@ -10,6 +10,7 @@ public class RulesUtils
 	public static final String ACTION_DISALLOW = "disallow";
 	
 	public static boolean shouldDownloadLibrary(VersionIndex.Rules[] rule) {
+		if (rule == null) return true;
 	    List<String> allowedOS = new ArrayList<>();
 	    for (VersionIndex.Rules entry: rule) {
 			if (ACTION_ALLOW.equals(entry.action)) {

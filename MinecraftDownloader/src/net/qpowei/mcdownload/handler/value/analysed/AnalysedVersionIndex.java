@@ -425,9 +425,10 @@ public class AnalysedVersionIndex implements IMirrorProperties
 				}
 				
 				public boolean shouldExtract(String name) {
-					for (String e : exclude) {
-						if (e.equalsIgnoreCase(name))
+					for (String e : exclude) { 
+						if (e.equalsIgnoreCase(name) || name.startsWith(e)) {
 							return false;
+						}
 					}
 					return true;
 				}

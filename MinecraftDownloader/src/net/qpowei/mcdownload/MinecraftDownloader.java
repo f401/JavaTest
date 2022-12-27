@@ -7,6 +7,18 @@ import net.qpowei.mcdownload.util.MultiFileDownloader;
 import net.qpowei.mcdownload.mirror.providers.IProviders;
 import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionIndex;
 import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionList;
+import net.qpowei.mcdownload.util.RulesUtils;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.jar.JarFile;
+import java.io.IOException;
+import java.util.jar.JarInputStream;
+import java.io.FileInputStream;
+import java.util.jar.JarEntry;
+import java.io.InputStream;
+import java.util.Enumeration;
+import net.qpowei.mcdownload.util.SHA1Utils;
+import java.io.FileOutputStream;
 
 public class MinecraftDownloader {
 	
@@ -14,6 +26,7 @@ public class MinecraftDownloader {
 	private IProviders providers;
 	private VersionProfile profile;
 	private MultiFileDownloader.DownloadEvent assetsEvent, jarEvent, jsonEvent;
+	private List<AnalysedVersionIndex.DependentLibrary.Natives> extractList;
 
 	public MinecraftDownloader(VersionProfile profile, MultiFileDownloader downloader, IProviders providers, 
 	    MultiFileDownloader.DownloadEvent assetsEvent, MultiFileDownloader.DownloadEvent jarEvent, 
@@ -24,6 +37,7 @@ public class MinecraftDownloader {
 		this.assetsEvent = assetsEvent;
 		this.jarEvent = jarEvent;
 		this.jsonEvent = jsonEvent;
+		this.extractList = new ArrayList<>();
 	}
 	
 	public MinecraftDownloader(VersionProfile profile, MultiFileDownloader downloader,
@@ -61,13 +75,20 @@ public class MinecraftDownloader {
 	}
 	
 	public void downloadLibraries(AnalysedVersionIndex.DependentLibrary[] libs) {
-		libs = providers.getCacher().getShouldDownloadLibraries(profile, libs);
 		for (AnalysedVersionIndex.DependentLibrary entry: libs) {
-			if (entry.hasArtifact()) {
+			
+			if (entry.hasArtifact() && 
+			   providers.getCacher().shouldDownloadLibrary(profile, entry)
+			&& RulesUtils.shouldDownloadLibrary(entry.getRules())) {
 			    downloader.addIntoDownloadList(entry.getURL(), providers.getURLPath().getLibrarySavePath(profile, entry));
-			} 
-			if (entry.hasNative() && providers.getCacher().shouldDownloadNativeLibrary(profile, entry.getNatives().getCurrentOSNative())) {
-				downloader.addIntoDownloadList(entry.getNatives().getCurrentOSNative().getURL(), providers.getURLPath().getLibrarySavePath(profile, entry));
+			}
+			
+			if (entry.hasNative()) {
+				if (providers.getCacher().shouldDownloadNativeLibrary(profile, entry.getNatives().getCurrentOSNative())) {
+				    downloader.addIntoDownloadList(entry.getNatives().getCurrentOSNative().getURL(), providers.getURLPath().
+				        getNativeLibrarySavePath(profile, entry.getNatives().getCurrentOSNative()));
+				}
+				extractList.add(entry.getNatives());
 			}
 		}
 		downloader.startMultiThreadDownloadBlocking();
@@ -103,14 +124,61 @@ public class MinecraftDownloader {
 		downloader.downloadAsFileWithRetries(providers.getMirror().getVersionListURL(), saveTo);
 	}
 	
-	public void downloadGame() {
+	public MinecraftDownloader extractNatives() {
+		for (AnalysedVersionIndex.DependentLibrary.Natives entry: extractList) {
+			JarFile jfile = null;
+			FileOutputStream fos = null;
+			try {
+				jfile = new JarFile(
+				    providers.getURLPath().getNativeLibrarySavePath(profile, entry.getCurrentOSNative())
+				);
+			    Enumeration<JarEntry> e = jfile.entries();
+			    while (e.hasMoreElements()) {
+				     JarEntry jentry = e.nextElement();
+				     String path = providers.getURLPath().getNativeExtractPath(profile) + jentry.getName();
+				     if (!jentry.isDirectory() && entry.shouldExtract(jentry.getName())) {
+					    new File(path).getParentFile().mkdirs();
+					    InputStream is = jfile.getInputStream(jentry);
+					    fos = new FileOutputStream(path);
+					    byte[] buffer = new byte[1024];
+					    int len = 0;
+					    while((len = is.read(buffer)) > 0) {
+						    fos.write(buffer, 0, len);
+					    }
+						
+					    fos.close();
+						fos = null;
+				    }
+			    }
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					jfile.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				if (fos != null) {
+					try {
+						fos.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		return this;
+	}
+	
+	public MinecraftDownloader downloadGame() {
 		File defaultList = new File(MCDConstants.defaultVersionListPath);
 		if (defaultList.exists()) 
 			downloadVersionList(defaultList);
-		downloadGame(defaultList);
+		return downloadGame(defaultList);
 	}
 	
-	public void downloadGame(File versionList) {
+	public MinecraftDownloader downloadGame(File versionList) {
 		AnalysedVersionList list = null;
 		downloader.setEvent(jsonEvent);
 		try {
@@ -128,6 +196,7 @@ public class MinecraftDownloader {
 		downloadLibraries(aIndex.getDependsLibrary());
 		downloader.setEvent(assetsEvent);
 		downloadAssets(assetsIndexFile);
+		return this;
 	}
 	
 }

@@ -20,4 +20,5 @@ public interface ICacher
 	boolean shouldDownloadMainJar(VersionProfile profile, AnalysedVersionIndex index);
 	boolean shouldDownloadMainJar(VersionProfile profile, String sha1);
 	boolean shouldDownloadNativeLibrary(VersionProfile profile, AnalysedVersionIndex.DependentLibrary.Natives.Native nat);
+	boolean shouldDownloadLibrary(VersionProfile profile, AnalysedVersionIndex.DependentLibrary src);
 }
