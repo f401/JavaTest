@@ -317,7 +317,7 @@ public class AnalysedVersionIndex implements IMirrorProperties
 		}
 		
 		public boolean hasNative() {
-			return natives != null;
+			return natives != null && natives.getCurrentOSNative() != null;
 		}
 		
 		public boolean hasArtifact() {
@@ -421,7 +421,9 @@ public class AnalysedVersionIndex implements IMirrorProperties
 				}
 				
 				public static Extract analyse(VersionIndex.DependentLibrary.Extract src) {
-					return new Extract(src.exclude);
+					if (src != null)
+					    return new Extract(src.exclude);
+					return null;
 				}
 				
 				public boolean shouldExtract(String name) {

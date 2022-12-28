@@ -32,7 +32,7 @@ public class MultiFileDownloader
 		this.properties = header;
 		
 		this.downloadList = new ConcurrentHashMap<>();
-		this.threadPool = new ThreadPoolExecutor(maxThread, maxThread, 5000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+		this.threadPool = new ThreadPoolExecutor(0, maxThread, 5000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
 	}
 
 	public MultiFileDownloader(DownloadEvent event) {
