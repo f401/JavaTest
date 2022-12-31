@@ -12,7 +12,7 @@ public class EndTag extends Tag<Byte>
 	
 	
 	public EndTag() {
-		super("", 0);
+		super("", (byte)0);
 	}
 
 	@Override

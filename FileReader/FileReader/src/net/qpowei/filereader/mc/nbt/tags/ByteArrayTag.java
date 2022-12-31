@@ -1,8 +1,7 @@
 package net.qpowei.filereader.mc.nbt.tags;
 
-import net.qpowei.filereader.mc.nbt.TagTypes;
 import java.util.ArrayList;
-import org.json.JSONObject;
+import net.qpowei.filereader.mc.nbt.TagTypes;
 
 public class ByteArrayTag extends BaseArrayTag<Byte>
 {

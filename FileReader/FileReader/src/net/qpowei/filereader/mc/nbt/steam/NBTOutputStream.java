@@ -1,13 +1,20 @@
 package net.qpowei.filereader.mc.nbt.steam;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import net.qpowei.filereader.EndianDataOutputStream;
-import net.qpowei.filereader.mc.nbt.tags.Tag;
-import java.io.IOException;
-import net.qpowei.filereader.mc.nbt.tags.ByteArrayTag;
-import net.qpowei.filereader.mc.nbt.tags.ListTag;
 import net.qpowei.filereader.mc.nbt.TagTypes;
+import net.qpowei.filereader.mc.nbt.tags.ByteArrayTag;
+import net.qpowei.filereader.mc.nbt.tags.ByteTag;
+import net.qpowei.filereader.mc.nbt.tags.DoubleTag;
 import net.qpowei.filereader.mc.nbt.tags.EndTag;
+import net.qpowei.filereader.mc.nbt.tags.FloatTag;
+import net.qpowei.filereader.mc.nbt.tags.IntTag;
+import net.qpowei.filereader.mc.nbt.tags.ListTag;
+import net.qpowei.filereader.mc.nbt.tags.LongTag;
+import net.qpowei.filereader.mc.nbt.tags.ShortTag;
+import net.qpowei.filereader.mc.nbt.tags.StringTag;
+import net.qpowei.filereader.mc.nbt.tags.Tag;
 
 public class NBTOutputStream extends EndianDataOutputStream
 {
@@ -29,22 +36,22 @@ public class NBTOutputStream extends EndianDataOutputStream
 		}
 		switch(tag.type().getId()) {
 		    case 1://Byte
-			    writeByte(tag.getValue());
+			    writeByte(((ByteTag)tag).getValue());
 				break;
 			case 2://Short
-			    writeShort(tag.getValue());
+			    writeShort(((ShortTag)tag).getValue());
 				break;
 			case 3://Int
-			    writeInt(tag.getValue());
+			    writeInt(((IntTag)tag).getValue());
 				break;
 			case 4://Long
-			    writeLong(tag.getValue());
+			    writeLong(((LongTag)tag).getValue());
 				break;
 			case 5://Float
-			    writeFloat(tag.getValue());
+			    writeFloat(((FloatTag)tag).getValue());
 				break;
 			case 6://Double
-			    writeDouble(tag.getValue());
+			    writeDouble(((DoubleTag)tag).getValue());
 				break;
 			case 7://ByteArray
 			    ByteArrayTag bat = (ByteArrayTag) tag;
@@ -54,7 +61,7 @@ public class NBTOutputStream extends EndianDataOutputStream
 				}
 				break;
 			case 8://String
-		        writeUTF((String)tag.getValue());
+		        writeUTF(((StringTag)tag).getValue());
 				break;
 			case 9://List
 			    ListTag lt = (ListTag) tag;
@@ -71,7 +78,7 @@ public class NBTOutputStream extends EndianDataOutputStream
 			    
 			case 12://LongArray
 			default:
-			    throw new RuntimeException("Unknow Tag type: " + tagType);
+			    throw new RuntimeException("Unknow Tag type: " + tag.type().getId());
 		}
 	}
 }

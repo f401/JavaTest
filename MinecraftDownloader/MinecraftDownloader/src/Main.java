@@ -22,9 +22,8 @@ import net.qpowei.mcdownload.util.RulesUtils;
 public class Main {
 	
 	public static void main(String[] args) throws IOException {
-		DownloadUtils.downloadFile("https://launcher.mojang.com/v1/objects/374c6b789574afbdc901371207155661e0509e17/client.txt", new File("/sdcard/client.txt"));
+		long start = System.currentTimeMillis();
 		MCDConstants.defaultProviders.setMirror(DefaultMirrors.BMCLAPI);
-		
 		new MinecraftDownloader(new VersionProfile("1.16.5", "1.16.5", "/sdcard/MinecraftDownloader", false), 
 		new MultiFileDownloader(), 
 		    new MultiFileDownloader.DownloadEvent() {
@@ -87,7 +86,7 @@ public class Main {
 					err.printStackTrace();
 				}
 			}).downloadGame().extractNatives();
-		System.out.println("download finish");
+		System.out.println("download finish, using " + (double)((System.currentTimeMillis() - start)));
     }
     
 }

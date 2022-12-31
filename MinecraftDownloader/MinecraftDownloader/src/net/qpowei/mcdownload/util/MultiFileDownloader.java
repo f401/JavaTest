@@ -22,7 +22,7 @@ public class MultiFileDownloader
 	private DownloadEvent event;
 	private ConcurrentMap<String, String> properties;
     private ConcurrentMap<String, File> downloadList;
-	private ExecutorService threadPool;
+	private ThreadPoolExecutor threadPool;
 	
 	public MultiFileDownloader(int maxRetryTimes, int retryAfterMs, int maxThread, int connectionTimeout, MultiFileDownloader.DownloadEvent event, ConcurrentMap<String, String> header) {
 		this.maxRetryTimes = maxRetryTimes;
@@ -32,7 +32,8 @@ public class MultiFileDownloader
 		this.properties = header;
 		
 		this.downloadList = new ConcurrentHashMap<>();
-		this.threadPool = new ThreadPoolExecutor(0, maxThread, 5000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+		this.threadPool = new ThreadPoolExecutor(maxThread, maxThread, 5000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+		threadPool.allowCoreThreadTimeOut(true);
 	}
 
 	public MultiFileDownloader(DownloadEvent event) {
@@ -118,7 +119,7 @@ public class MultiFileDownloader
 	public void waitUntilDownloadFinish() {
 		while (!downloadFinished()) {
 			try {
-				Thread.sleep(500);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {}
 		}
 	}

@@ -1,24 +1,21 @@
 package net.qpowei.mcdownload;
 
-import net.qpowei.mcdownload.handler.JsonParser;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import net.qpowei.mcdownload.handler.JsonParser;
 import net.qpowei.mcdownload.handler.value.analysed.AnalysedAssetIndex;
-import net.qpowei.mcdownload.util.MultiFileDownloader;
-import net.qpowei.mcdownload.mirror.providers.IProviders;
 import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionIndex;
 import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionList;
+import net.qpowei.mcdownload.mirror.providers.IProviders;
+import net.qpowei.mcdownload.util.MultiFileDownloader;
 import net.qpowei.mcdownload.util.RulesUtils;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.jar.JarFile;
-import java.io.IOException;
-import java.util.jar.JarInputStream;
-import java.io.FileInputStream;
-import java.util.jar.JarEntry;
-import java.io.InputStream;
-import java.util.Enumeration;
-import net.qpowei.mcdownload.util.SHA1Utils;
-import java.io.FileOutputStream;
 
 public class MinecraftDownloader {
 	
@@ -65,18 +62,19 @@ public class MinecraftDownloader {
 	public void downloadAssets(File json) {
 	     AnalysedAssetIndex index = JsonParser.parseAssetsIndex(json).analyse();
 		 index = providers.getCacher().getShouldDownloadAssetsList(profile, index);
-		 for (int i = 0; i < index.size(); ++i) {
-			 	downloader.addIntoDownloadList(
-				    index.get(i).getURL(), MCDConstants.defaultProviders.getURLPath().
-					    getAssetsSavePath(profile, index.get(i).getSha1()));
+		 if (index != null) {
+		 		for (int i = 0; i < index.size(); ++i) {
+			 		downloader.addIntoDownloadList(
+				 	   index.get(i).getURL(), MCDConstants.defaultProviders.getURLPath().
+						    getAssetsSavePath(profile, index.get(i).getSha1()));
+			 }
+			 downloader.startMultiThreadDownloadBlocking();
+			 downloader.waitUntilDownloadFinish();
 		 }
-		 downloader.startMultiThreadDownloadBlocking();
-		 downloader.waitUntilDownloadFinish();
 	}
 	
 	public void downloadLibraries(AnalysedVersionIndex.DependentLibrary[] libs) {
 		for (AnalysedVersionIndex.DependentLibrary entry: libs) {
-			
 			if (entry.hasArtifact() && 
 			   providers.getCacher().shouldDownloadLibrary(profile, entry)
 			&& RulesUtils.shouldDownloadLibrary(entry.getRules())) {
