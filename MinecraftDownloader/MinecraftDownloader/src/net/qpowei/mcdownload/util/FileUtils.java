@@ -1,12 +1,12 @@
 package net.qpowei.mcdownload.util;
 
-import java.io.File;
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+
 import net.qpowei.mcdownload.MCDConstants;
 
 public class FileUtils
@@ -49,7 +49,7 @@ public class FileUtils
 			}
 			result.deleteCharAt(result.length() - 1);// remove \n
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				br.close();
@@ -71,7 +71,7 @@ public class FileUtils
 				baos.write(buffer, 0, len);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				fis.close();

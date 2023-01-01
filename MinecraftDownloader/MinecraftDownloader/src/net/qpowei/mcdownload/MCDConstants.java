@@ -22,5 +22,5 @@ public class MCDConstants
 	.create();
 	public static int BUFFER_SIZE = 1024;
 	public static IProviders defaultProviders = DefaultProviders.create();
-	public static String defaultVersionListPath = "/sdcard/version_manifest_v2.json";
+	public static String defaultVersionListPath = "/opt/mc/version_manifest_v2.json";
 }

@@ -31,7 +31,7 @@ public abstract class Tag<T>
 
 	@Override
 	public String toString() {
-		return "Tag_" + type().getDisplayName() + " {key: " + key + ", value: " + value + "}";
+		return "Tag_" + type().getDisplayName() +" [key=" + key + ", value=" + value + "]";
 	}
 	
 	public abstract Tag<T> copy();

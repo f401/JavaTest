@@ -1,8 +1,10 @@
-package net.qpowei.filereader.mc.nbt.steam;
+package net.qpowei.filereader.mc.nbt.stream;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.zip.GZIPInputStream;
+
 import net.qpowei.filereader.EndianDataInputStream;
 import net.qpowei.filereader.mc.nbt.TagTypes;
 import net.qpowei.filereader.mc.nbt.tags.ByteArrayTag;
@@ -22,8 +24,8 @@ import net.qpowei.filereader.mc.nbt.tags.Tag;
 
 public class NBTInputStream extends EndianDataInputStream
 {
-	public NBTInputStream(InputStream stream) {
-		super(stream, false);
+	public NBTInputStream(InputStream stream) throws IOException {
+		super(new GZIPInputStream(stream), false);
 	}
 	
 	public Tag<?> readTag() throws IOException {

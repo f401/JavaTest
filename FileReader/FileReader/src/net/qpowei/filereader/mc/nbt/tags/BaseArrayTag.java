@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import net.qpowei.filereader.mc.nbt.TagTypes;
 import java.util.Arrays;
 
-abstract class BaseArrayTag<T> extends Tag<ArrayList<T>>
-{
+abstract class BaseArrayTag<T> extends Tag<ArrayList<T>> {
 
      public BaseArrayTag(String key, ArrayList<T> value) {
 		 super(key, value);

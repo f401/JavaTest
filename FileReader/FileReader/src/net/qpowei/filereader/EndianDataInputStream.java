@@ -6,15 +6,30 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class EndianDataInputStream extends FilterInputStream implements DataInput 
-{
+public class EndianDataInputStream extends FilterInputStream implements DataInput {
 	private DataInputStream stream;
 	private boolean littleEndian;
 
 	public EndianDataInputStream(InputStream stream, boolean littleEndian) {
 		super(stream);
-        this.stream = new DataInputStream(stream);
+		this.stream = new DataInputStream(stream);
 		this.littleEndian = littleEndian;
+	}
+
+	public long skip(long n) throws IOException {
+		return stream.skip(n);
+	}
+
+	public int available() throws IOException {
+		return stream.available();
+	}
+
+	public void mark(int readlimit) {
+		stream.mark(readlimit);
+	}
+
+	public void reset() throws IOException {
+		stream.reset();
 	}
 
 	public void setLittleEndian(boolean littleEndian) {
@@ -24,7 +39,6 @@ public class EndianDataInputStream extends FilterInputStream implements DataInpu
 	public boolean isLittleEndian() {
 		return littleEndian;
 	}
-	
 
 	@Override
 	public void readFully(byte[] p1) throws IOException {
@@ -59,7 +73,7 @@ public class EndianDataInputStream extends FilterInputStream implements DataInpu
 	@Override
 	public short readShort() throws IOException {
 		short result = stream.readShort();
-		return littleEndian ? Short.reverseBytes(result):result;
+		return littleEndian ? Short.reverseBytes(result) : result;
 	}
 
 	@Override
@@ -75,13 +89,13 @@ public class EndianDataInputStream extends FilterInputStream implements DataInpu
 	@Override
 	public int readInt() throws IOException {
 		int result = stream.readInt();
-		return littleEndian ? Integer.reverseBytes(result):result;
+		return littleEndian ? Integer.reverseBytes(result) : result;
 	}
 
 	@Override
 	public long readLong() throws IOException {
 		long result = stream.readLong();
-		return littleEndian ? Long.reverseBytes(result):result;
+		return littleEndian ? Long.reverseBytes(result) : result;
 	}
 
 	@Override
