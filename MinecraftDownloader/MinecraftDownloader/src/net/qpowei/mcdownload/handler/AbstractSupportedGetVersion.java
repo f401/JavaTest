@@ -2,8 +2,8 @@ package net.qpowei.mcdownload.handler;
 
 import net.qpowei.mcdownload.handler.constants.VersionListTypes;
 
-public abstract class AbstractSupportedGetVersion<T> implements ISupportedGetVersionList<T> 
-{
+public abstract class AbstractSupportedGetVersion<T> implements ISupportedGetVersionList<T> {
+
 	@Override
 	public T[] getReleaseList() {
 		return getListByString(VersionListTypes.TYPE_RELEASE);
@@ -19,7 +19,7 @@ public abstract class AbstractSupportedGetVersion<T> implements ISupportedGetVer
 		return getListByString(VersionListTypes.TYPE_OLD_ALPHA);
 	}
 
-    @Override
+	@Override
 	public T[] getOldBeta() {
 		return getListByString(VersionListTypes.TYPE_OLD_BETA);
 	}

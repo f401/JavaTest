@@ -1,60 +1,16 @@
 package net.qpowei.mcdownload.handler.value.analysed;
 
-import net.qpowei.mcdownload.mirror.providers.IProviders;
-import net.qpowei.mcdownload.handler.value.AssetsIndex;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+
 import net.qpowei.mcdownload.MCDConstants;
+import net.qpowei.mcdownload.handler.value.AssetsIndex;
+import net.qpowei.mcdownload.mirror.providers.IProviders;
 
-public class AnalysedAssetIndex implements IMirrorProperties
-{
-	
-	private final AssetInfo objects[];
-	private IProviders provider;
-	
-	public AnalysedAssetIndex(AssetInfo[] objects) {
-		this.objects = objects;
-		this.provider = MCDConstants.defaultProviders;
-	}
-	
-	public static AnalysedAssetIndex analyse(AssetsIndex index) {
-		ArrayList<AnalysedAssetIndex.AssetInfo> result = new ArrayList<>(index.objects.size());
-		for (Map.Entry<String, AssetsIndex.AssetsInfo> entry : index.objects.entrySet()) {
-			result.add(new AnalysedAssetIndex.AssetInfo(
-			    entry.getKey(), entry.getValue().hash, entry.getValue().size));
-		}
-		return new AnalysedAssetIndex(result.toArray(new AnalysedAssetIndex.AssetInfo[result.size()]));
-	}
-	
-	@Override
-	public IProviders getMirrorProvider() {
-		return provider;
-	}
+public class AnalysedAssetIndex implements IMirrorProperties {
 
-	@Override
-	public void setMirrorProvider(IProviders provider) {
-		setMirrorProvider(provider, true);
-	}
-	
-	public void setMirrorProvider(IProviders provider, boolean async) {
-		this.provider = provider;
-        for (AssetInfo info: objects) {
-			info.setMirrorProvider(provider);
-		}
-	}
-	
-	public AssetInfo get(int index) {
-		return objects[index];
-	}
-	
-	public int size() {
-		return objects.length;
-	}
-	
-	public static class AssetInfo extends AbstractMinecraftMirrorProperties
-	  implements ISupportedSizeProperties
-	{
+	public static class AssetInfo extends AbstractMinecraftMirrorProperties implements ISupportedSizeProperties {
 
 		private final String name, sha1;
 		private final int size;
@@ -77,7 +33,7 @@ public class AnalysedAssetIndex implements IMirrorProperties
 		public int getSize() {
 			return size;
 		}
-		
+
 		/* json文件里不直接包含 */
 		@Override
 		public String getURL() {
@@ -87,9 +43,57 @@ public class AnalysedAssetIndex implements IMirrorProperties
 		public String getURL(IProviders provider) {
 			if (provider != null)
 				return provider.getURLPath().getAssetsURLBySHA1(sha1);
-			else 
-				return this.provider.getURLPath().getAssetsURLBySHA1(sha1);//same as getURL()
+			else
+				return this.provider.getURLPath().getAssetsURLBySHA1(sha1);// same as getURL()
 		}
 
+	}
+
+	public static AnalysedAssetIndex analyse(AssetsIndex index) {
+		ArrayList<AnalysedAssetIndex.AssetInfo> result = new ArrayList<>(index.objects.size());
+		for (Map.Entry<String, AssetsIndex.AssetsInfo> entry : index.objects.entrySet()) {
+			result.add(new AnalysedAssetIndex.AssetInfo(entry.getKey(), entry.getValue().hash,
+					entry.getValue().size));
+		}
+		return new AnalysedAssetIndex(result.toArray(new AnalysedAssetIndex.AssetInfo[result.size()]));
+	}
+
+	private final AssetInfo objects[];
+
+	private IProviders provider;
+
+	public AnalysedAssetIndex(AssetInfo[] objects) {
+		this.objects = objects;
+		this.provider = MCDConstants.defaultProviders;
+	}
+
+	@Override
+	public String toString() {
+		return "AnalysedAssetIndex [objects=" + Arrays.toString(objects) + ", provider=" + provider + "]";
+	}
+
+	@Override
+	public IProviders getMirrorProvider() {
+		return provider;
+	}
+
+	@Override
+	public void setMirrorProvider(IProviders provider) {
+		setMirrorProvider(provider, true);
+	}
+
+	public void setMirrorProvider(IProviders provider, boolean async) {
+		this.provider = provider;
+		for (AssetInfo info : objects) {
+			info.setMirrorProvider(provider);
+		}
+	}
+
+	public AssetInfo get(int index) {
+		return objects[index];
+	}
+
+	public int size() {
+		return objects.length;
 	}
 }

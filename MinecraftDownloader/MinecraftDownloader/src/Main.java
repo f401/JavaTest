@@ -1,23 +1,11 @@
-import java.util.*;
-
-import net.qpowei.mcdownload.handler.JsonParser;
-import net.qpowei.mcdownload.handler.value.VersionList;
-import net.qpowei.mcdownload.handler.VersionListAnalyser;
-import net.qpowei.mcdownload.util.DownloadUtils;
 import java.io.File;
-import net.qpowei.mcdownload.util.SHA1Utils;
-import com.google.gson.GsonBuilder;
-import net.qpowei.mcdownload.MCDConstants;
-import net.qpowei.mcdownload.mirror.DefaultMirrors;
-import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionIndex;
-import net.qpowei.mcdownload.util.MultiFileDownloader;
 import java.io.IOException;
+
+import net.qpowei.mcdownload.MCDConstants;
 import net.qpowei.mcdownload.MinecraftDownloader;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import net.qpowei.mcdownload.VersionProfile;
-import net.qpowei.mcdownload.handler.value.VersionIndex;
-import net.qpowei.mcdownload.util.RulesUtils;
+import net.qpowei.mcdownload.mirror.DefaultMirrors;
+import net.qpowei.mcdownload.util.MultiFileDownloader;
 
 public class Main {
 	

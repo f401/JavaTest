@@ -37,18 +37,22 @@ public class DefaultProviders implements IProviders
 		return new DefaultCacher(this);
 	}
 	
+	@Override
 	public void setCacher(ICacher cacher) {
 		this.cacher = cacher;
 	}
 
+	@Override
 	public void setInjector(IInjector injector) {
 		this.injector = injector;
 	}
 
+	@Override
 	public void setMirror(IMirror mirror) {
 		this.mirror = mirror;
 	}
 	
+	@Override
 	public void setURLPath(IURLPath urlPath) {
 		this.urlPath = urlPath;
 	}

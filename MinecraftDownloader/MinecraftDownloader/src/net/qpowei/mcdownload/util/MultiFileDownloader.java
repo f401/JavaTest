@@ -10,20 +10,28 @@ import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
 import net.qpowei.mcdownload.MCDConstants;
 
 public class MultiFileDownloader
 {
+	public interface DownloadEvent {
+		//返回true表示继续下载
+		boolean onServerReturnWrongCode(String input, File to, int code, String msg);
+		void onDownload(String input, File to, long curr, long total, double speeding);
+		void onDownloadFailed(Throwable err, String inputUrl, File to, int downloadedCount, int maxRetry);
+	}
+
 	private int maxRetryTimes, retryAfterMs, connectionTimeout;
 	private DownloadEvent event;
-	private ConcurrentMap<String, String> properties;
-    private ConcurrentMap<String, File> downloadList;
-	private ThreadPoolExecutor threadPool;
+    private ConcurrentMap<String, String> properties;
+	private ConcurrentMap<String, File> downloadList;
 	
+	private ThreadPoolExecutor threadPool;
+
 	public MultiFileDownloader(int maxRetryTimes, int retryAfterMs, int maxThread, int connectionTimeout, MultiFileDownloader.DownloadEvent event, ConcurrentMap<String, String> header) {
 		this.maxRetryTimes = maxRetryTimes;
 		this.retryAfterMs = retryAfterMs;
@@ -35,7 +43,7 @@ public class MultiFileDownloader
 		this.threadPool = new ThreadPoolExecutor(maxThread, maxThread, 5000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
 		threadPool.allowCoreThreadTimeOut(true);
 	}
-
+	
 	public MultiFileDownloader(DownloadEvent event) {
 		this(5, 2000, MCDConstants.bestThreadCount, 10000, event, null);
 	}
@@ -150,13 +158,6 @@ public class MultiFileDownloader
 	
 	public ConcurrentMap<String, File> getUndoneDownloadList() {
 		return downloadList;
-	}
-	
-	public interface DownloadEvent {
-		//返回true表示继续下载
-		boolean onServerReturnWrongCode(String input, File to, int code, String msg);
-		void onDownload(String input, File to, long curr, long total, double speeding);
-		void onDownloadFailed(Throwable err, String inputUrl, File to, int downloadedCount, int maxRetry);
 	}
 	
 	public void stopDownloadNow() {

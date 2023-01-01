@@ -9,6 +9,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
 import net.qpowei.mcdownload.handler.JsonParser;
 import net.qpowei.mcdownload.handler.value.analysed.AnalysedAssetIndex;
 import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionIndex;
