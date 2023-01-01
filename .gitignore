@@ -3,3 +3,5 @@ bin
 .classpath
 .gradle
 build
+.settings
+outputs
