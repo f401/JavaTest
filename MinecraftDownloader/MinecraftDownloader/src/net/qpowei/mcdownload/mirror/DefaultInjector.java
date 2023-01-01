@@ -4,8 +4,8 @@ import net.qpowei.mcdownload.mirror.providers.IMirrorProvider;
 
 public class DefaultInjector implements IInjector
 {
-	private IMirrorProvider provider;
 	private static final IMirror from = DefaultMirrors.MOJANG;
+	private IMirrorProvider provider;
 
 	public DefaultInjector(IMirrorProvider provider) {
 		this.provider = provider;

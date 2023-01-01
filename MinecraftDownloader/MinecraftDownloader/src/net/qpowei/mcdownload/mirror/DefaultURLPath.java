@@ -1,11 +1,11 @@
 package net.qpowei.mcdownload.mirror;
 
 import java.io.File;
+
+import net.qpowei.mcdownload.VersionProfile;
 import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionIndex;
 import net.qpowei.mcdownload.mirror.providers.IMirrorProvider;
 import net.qpowei.mcdownload.util.FileUtils;
-import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionIndex.DependentLibrary;
-import net.qpowei.mcdownload.VersionProfile;
 import net.qpowei.mcdownload.util.OperatingSystem;
 
 public class DefaultURLPath implements IURLPath
