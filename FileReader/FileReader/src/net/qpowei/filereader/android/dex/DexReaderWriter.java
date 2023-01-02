@@ -108,8 +108,6 @@ public class DexReaderWriter extends EndianRandomAccessFile {
 			ids.add(new DexFile.DexProtoID(readInt(), readInt(), readInt()));
 		}
 
-		System.out.println(ids);
-		
 		ArrayList<DexFile.DexProtoID.Params> protoParam = new ArrayList<>();
 		for (DexFile.DexProtoID id : ids) {
 			if (id.paramsOffset != 0) {
