@@ -16,22 +16,6 @@ public class EndianDataInputStream extends FilterInputStream implements DataInpu
 		this.littleEndian = littleEndian;
 	}
 
-	public long skip(long n) throws IOException {
-		return stream.skip(n);
-	}
-
-	public int available() throws IOException {
-		return stream.available();
-	}
-
-	public void mark(int readlimit) {
-		stream.mark(readlimit);
-	}
-
-	public void reset() throws IOException {
-		stream.reset();
-	}
-
 	public void setLittleEndian(boolean littleEndian) {
 		this.littleEndian = littleEndian;
 	}
@@ -66,8 +50,8 @@ public class EndianDataInputStream extends FilterInputStream implements DataInpu
 	}
 
 	@Override
-	public int readUnsignedByte() {
-		throw new UnsupportedOperationException();
+	public int readUnsignedByte() throws IOException {
+		return stream.readUnsignedByte();
 	}
 
 	@Override
@@ -83,7 +67,7 @@ public class EndianDataInputStream extends FilterInputStream implements DataInpu
 
 	@Override
 	public char readChar() throws IOException {
-		return stream.readChar();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
