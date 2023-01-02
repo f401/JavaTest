@@ -41,7 +41,7 @@ public class DexFile {
 
 	static class DexProtoID {
 		public int shortlyIdx;//方法声明的字符串，指向 DexStringID的索引
-		public int returnTypeIdx;//方法返回类型字符串，指向 DexStringID的索引
+		public int returnTypeIdx;//方法返回类型字符串，指向 DexTypeId 的索引
 		public int paramsOffset;//下面的偏移
 		
 		@Override
