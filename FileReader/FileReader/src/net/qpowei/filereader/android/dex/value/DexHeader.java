@@ -1,8 +1,8 @@
-package net.qpowei.filereader.android.dex;
+package net.qpowei.filereader.android.dex.value;
 
 import java.util.Arrays;
 
-class DexHeader {
+public class DexHeader {
 	public byte[] magicNumber = new byte[8];
 	public int checksum; 
 	public byte[] signature = new byte[20];

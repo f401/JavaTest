@@ -5,8 +5,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import net.qpowei.filereader.EndianRandomAccessFile;
+import net.qpowei.filereader.android.dex.value.DexFile;
+import net.qpowei.filereader.android.dex.value.DexHeader;
+import net.qpowei.filereader.android.dex.value.DexProtoID;
+import net.qpowei.filereader.android.dex.value.DexStringID;
+import net.qpowei.filereader.android.dex.value.DexTypeList;
+import net.qpowei.filereader.android.dex.value.DexTypeItem;
 
 public class DexReaderWriter extends EndianRandomAccessFile {
 
@@ -63,17 +68,17 @@ public class DexReaderWriter extends EndianRandomAccessFile {
 	}
 
 	private void readStringPool(DexFile file) throws IOException {
-		ArrayList<DexFile.DexStringID> stringOffsets = new ArrayList<>(file.header.stringIDSize);
+		ArrayList<DexStringID> stringOffsets = new ArrayList<>(file.header.stringIDSize);
 		long curr = getFilePointer();//保存文件读取前的文件指针
 
 		/** 读取偏移 */
 		seek(file.header.stringIDOffset);
 		for (int i = 0; i < file.header.stringIDSize; ++i) {
-			stringOffsets.add(new DexFile.DexStringID(readInt()));
+			stringOffsets.add(new DexStringID(readInt()));
 		}
 
 		/** 真正读取字符串 */
-		for (DexFile.DexStringID off : stringOffsets) {
+		for (DexStringID off : stringOffsets) {
 			seek(off.offset);
 			int len = readUleb128AsInt();
 			byte[] buffer = new byte[len];
@@ -103,21 +108,21 @@ public class DexReaderWriter extends EndianRandomAccessFile {
 		
 		seek(file.header.protoIDOffset);
 
-		ArrayList<DexFile.DexProtoID> ids = new ArrayList<>();
+		ArrayList<DexProtoID> ids = new ArrayList<>();
 		for (int i = 0; i < file.header.protoIDSize; ++i) {
-			ids.add(new DexFile.DexProtoID(readInt(), readInt(), readInt()));
+			ids.add(new DexProtoID(readInt(), readInt(), readInt()));
 		}
 
-		ArrayList<DexFile.DexProtoID.Params> protoParam = new ArrayList<>();
-		for (DexFile.DexProtoID id : ids) {
+		ArrayList<DexTypeList> protoParam = new ArrayList<>();
+		for (DexProtoID id : ids) {
 			if (id.paramsOffset != 0) {
 				seek(id.paramsOffset);
 				int len = readInt();
-				ArrayList<DexFile.DexProtoID.Params.Param> params = new ArrayList<>(len);
+				ArrayList<DexTypeItem> params = new ArrayList<>(len);
 				for (int i = 0; i < len; ++i) {
-					params.add(new DexFile.DexProtoID.Params.Param(readShort()));
+					params.add(new DexTypeItem(readShort()));
 				}
-				protoParam.add(new DexFile.DexProtoID.Params(len, params.toArray(new DexFile.DexProtoID.Params.Param[params.size()])));
+				protoParam.add(new DexTypeList(len, params.toArray(new DexTypeItem[params.size()])));
 			} else {
 				protoParam.add(null);
 			}
@@ -127,7 +132,7 @@ public class DexReaderWriter extends EndianRandomAccessFile {
 
 		//添加进DexFile.proto
 		for (int i = 0; i < protoParam.size(); ++i) {
-			DexFile.DexProtoID id = ids.get(i);
+			DexProtoID id = ids.get(i);
 			file.proto.add(new DexFile.DexProto(id.shortlyIdx, id.returnTypeIdx, protoParam.get(i) == null ? null :
 						protoParam.get(i).toShortArray()));
 		}
