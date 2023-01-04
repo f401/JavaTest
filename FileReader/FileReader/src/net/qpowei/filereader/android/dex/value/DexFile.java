@@ -3,18 +3,25 @@ package net.qpowei.filereader.android.dex.value;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import net.qpowei.filereader.android.dex.value.dexClass.DexClassData;
+import net.qpowei.filereader.android.dex.value.dexClass.DexClassDef;
+import net.qpowei.filereader.android.dex.value.dexIDs.DexFieldID;
+import net.qpowei.filereader.android.dex.value.dexIDs.DexMethodID;
+
 public class DexFile {
 	public DexHeader header;
 	public ArrayList<String> stringPool = new ArrayList<>();
-	public ArrayList<DexTypeId> types = new ArrayList<>();
+	public ArrayList<Integer> types = new ArrayList<>();
 	public ArrayList<DexProto> proto = new ArrayList<>();
 	public ArrayList<DexFieldID> fields = new ArrayList<>();
 	public ArrayList<DexMethodID> methods = new ArrayList<>();
+	public ArrayList<DexClassDef> classDefs = new ArrayList<>();
+	public ArrayList<DexFile.DexClass> classes = new ArrayList<>();
 
 	@Override
 	public String toString() {
-		return "DexFile [header=" + header + ",\n stringPool=" + stringPool + "\n, types=" + types + "\n, proto=" + proto + ", fields=" 
-		        + fields + ",\n methods" + methods
+		return "DexFile [header=" + header + ", \nstringPool=" + stringPool + ", \ntypes=" + types + ", \nproto=" + proto
+				+ ", \nfields=" + fields + ", \nmethods=" + methods + ", classDefs=" + classDefs + ", \nclasses=" + classes
 				+ "]";
 	}
 
@@ -34,16 +41,14 @@ public class DexFile {
 		}
 	}
 
-	public static class DexTypeId {
-		public int idx;//指向stringPool的索引
-
-		public DexTypeId(int idx) {
-			this.idx = idx;
-		}
+	public static class DexClass {
+		public DexTypeList interfaces;
+		public DexClassDef def;
+		public DexClassData data;
 
 		@Override
 		public String toString() {
-			return "DexTypeId [idx=" + idx + "]";
+			return "DexClass [interfaces=" + interfaces + ", def=" + def + ", data=" + data + "]";
 		}
 	}
 }

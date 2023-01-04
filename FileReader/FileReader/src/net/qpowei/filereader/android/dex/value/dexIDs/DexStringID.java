@@ -1,4 +1,4 @@
-package net.qpowei.filereader.android.dex.value;
+package net.qpowei.filereader.android.dex.value.dexIDs;
 
 public class DexStringID
 {

@@ -18,7 +18,7 @@ public class Main {
 	}
 
 	public static void androidDex() throws IOException {
-		DexReader dis = new DexReader("/sdcard/JavaTest/FileReader/exampleFiles/classes.dex");
+		DexReader dis = new DexReader("/opt/JavaTest/FileReader/exampleFiles/classes.dex");
 		System.out.println(dis.readDexFile());
 		dis.close();
 	}
