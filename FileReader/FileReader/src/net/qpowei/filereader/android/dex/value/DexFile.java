@@ -8,10 +8,12 @@ public class DexFile {
 	public ArrayList<String> stringPool = new ArrayList<>();
 	public ArrayList<DexTypeId> types = new ArrayList<>();
 	public ArrayList<DexProto> proto = new ArrayList<>();
+	public ArrayList<DexFieldID> fields = new ArrayList<>();
 
 	@Override
 	public String toString() {
-		return "DexFile [header=" + header + ", stringPool=" + stringPool + ", types=" + types + ", proto=" + proto
+		return "DexFile [header=" + header + ",\n stringPool=" + stringPool + "\n, types=" + types + "\n, proto=" + proto + ", fields=" 
+		        + fields
 				+ "]";
 	}
 

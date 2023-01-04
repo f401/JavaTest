@@ -12,10 +12,11 @@ import net.qpowei.filereader.android.dex.value.DexProtoID;
 import net.qpowei.filereader.android.dex.value.DexStringID;
 import net.qpowei.filereader.android.dex.value.DexTypeList;
 import net.qpowei.filereader.android.dex.value.DexTypeItem;
+import net.qpowei.filereader.android.dex.value.DexFieldID;
 
-public class DexReaderWriter extends EndianRandomAccessFile {
+public class DexReader extends EndianRandomAccessFile {
 
-	public DexReaderWriter(String file) throws FileNotFoundException {
+	public DexReader(String file) throws FileNotFoundException {
 		super(file, true);
 	}
 
@@ -84,7 +85,7 @@ public class DexReaderWriter extends EndianRandomAccessFile {
 			byte[] buffer = new byte[len];
 			readFully(buffer);
 			//检查是否以0结尾
-			if (readByte() != 0) throw new DexException("字符串不以0为结尾, off: " + getFilePointer());
+			if (readByte() != 0) throw new DexException("字符串不以0为结尾, off: " + getFilePointer() + ", len " + len);
 
 			file.stringPool.add(new String(buffer));
 		}
@@ -139,6 +140,18 @@ public class DexReaderWriter extends EndianRandomAccessFile {
 
 		seek(curr);
 	}
+	
+	private void readFields(DexFile file) throws IOException {
+		long curr = getFilePointer();
+		
+		seek(file.header.fieldIDOffset);
+		
+		for (int i = 0; i < file.header.fieldIDSize; ++i) {
+			file.fields.add(new DexFieldID(readShort(), readShort(), readInt()));
+		}
+		
+		seek(curr);
+	}
 
 	public DexFile readDexFile() throws IOException {
 		DexFile file = new DexFile();
@@ -146,11 +159,12 @@ public class DexReaderWriter extends EndianRandomAccessFile {
 		readStringPool(file);
 		readTypes     (file);
 		readProtos    (file);
+		readFields    (file);
 		return file;
 	}
 
 	private int readUleb128AsInt() throws IOException {
-		List<Byte> resultList = new ArrayList<>(4);
+		List<Byte> resultList = new ArrayList<>(5);
 		byte highBit;
 		do {
 			byte bytes = readByte();

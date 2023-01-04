@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.qpowei.filereader.android.dex.DexReaderWriter;
+import net.qpowei.filereader.android.dex.DexReader;
 import net.qpowei.filereader.mc.nbt.stream.NBTInputStream;
 import net.qpowei.filereader.mc.nbt.stream.NBTOutputStream;
 import net.qpowei.filereader.mc.nbt.tags.*;
@@ -18,7 +18,7 @@ public class Main {
 	}
 
 	public static void androidDex() throws IOException {
-		DexReaderWriter dis = new DexReaderWriter("/sdcard/JavaTest/FileReader/exampleFiles/classes.dex");
+		DexReader dis = new DexReader("/sdcard/JavaTest/FileReader/exampleFiles/classes.dex");
 		System.out.println(dis.readDexFile());
 		dis.close();
 	}
