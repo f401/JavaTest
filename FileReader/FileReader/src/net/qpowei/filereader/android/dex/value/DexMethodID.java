@@ -11,4 +11,10 @@ public class DexMethodID
 		this.protoIdx = protoIdx;
 		this.nameIdx = nameIdx;
 	}
+
+	@Override
+	public String toString() {
+		return "DexMethodID [classIdx=" + classIdx + ", protoIdx=" + protoIdx + ", nameIdx=" + nameIdx + "]";
+	}
+	
 }

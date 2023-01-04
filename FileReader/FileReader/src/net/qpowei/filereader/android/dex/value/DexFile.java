@@ -9,11 +9,12 @@ public class DexFile {
 	public ArrayList<DexTypeId> types = new ArrayList<>();
 	public ArrayList<DexProto> proto = new ArrayList<>();
 	public ArrayList<DexFieldID> fields = new ArrayList<>();
+	public ArrayList<DexMethodID> methods = new ArrayList<>();
 
 	@Override
 	public String toString() {
 		return "DexFile [header=" + header + ",\n stringPool=" + stringPool + "\n, types=" + types + "\n, proto=" + proto + ", fields=" 
-		        + fields
+		        + fields + ",\n methods" + methods
 				+ "]";
 	}
 

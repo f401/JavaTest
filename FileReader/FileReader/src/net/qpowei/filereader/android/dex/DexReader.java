@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.qpowei.filereader.EndianRandomAccessFile;
+import net.qpowei.filereader.android.dex.value.DexFieldID;
 import net.qpowei.filereader.android.dex.value.DexFile;
 import net.qpowei.filereader.android.dex.value.DexHeader;
+import net.qpowei.filereader.android.dex.value.DexMethodID;
 import net.qpowei.filereader.android.dex.value.DexProtoID;
 import net.qpowei.filereader.android.dex.value.DexStringID;
-import net.qpowei.filereader.android.dex.value.DexTypeList;
 import net.qpowei.filereader.android.dex.value.DexTypeItem;
-import net.qpowei.filereader.android.dex.value.DexFieldID;
+import net.qpowei.filereader.android.dex.value.DexTypeList;
 
 public class DexReader extends EndianRandomAccessFile {
 
@@ -22,7 +23,7 @@ public class DexReader extends EndianRandomAccessFile {
 
 	private DexHeader readHeader() throws IOException {
 		DexHeader header = new DexHeader();
-
+		seek(0);
 		readFully(header.magicNumber);
 		if (!header.compareMagic()) throw new DexException("Wrong Magic Number");
 		
@@ -141,15 +142,21 @@ public class DexReader extends EndianRandomAccessFile {
 		seek(curr);
 	}
 	
+	private void readMethods(DexFile file) throws IOException {
+		long curr = getFilePointer();
+		seek(file.header.methodIDOffset);
+		for (int i = 0; i < file.header.methodIDSize;++i) {
+			file.methods.add(new DexMethodID(readShort(), readShort(), readInt()));
+		}
+		seek(curr);
+	}
+	
 	private void readFields(DexFile file) throws IOException {
 		long curr = getFilePointer();
-		
 		seek(file.header.fieldIDOffset);
-		
 		for (int i = 0; i < file.header.fieldIDSize; ++i) {
 			file.fields.add(new DexFieldID(readShort(), readShort(), readInt()));
 		}
-		
 		seek(curr);
 	}
 
@@ -160,6 +167,7 @@ public class DexReader extends EndianRandomAccessFile {
 		readTypes     (file);
 		readProtos    (file);
 		readFields    (file);
+		readMethods   (file);
 		return file;
 	}
 
