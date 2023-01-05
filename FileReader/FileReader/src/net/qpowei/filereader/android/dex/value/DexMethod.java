@@ -7,9 +7,12 @@ public class DexMethod {
 	public IntUleb128 accessFlags;
 	public IntUleb128 codeOff;
 
+	public DexCode code;
+
 	@Override
 	public String toString() {
-		return "DexMethod [methodIdx=" + methodIdx + ", accessFlags=" + accessFlags + ", codeOff=" + codeOff + "]";
+		return "DexMethod [methodIdx=" + methodIdx + ", accessFlags=" + accessFlags + ", codeOff=" + codeOff + ", code="
+				+ code + "]";
 	}
 	public DexMethod(IntUleb128 methodIdx, IntUleb128 accessFlags, IntUleb128 codeOff) {
 		this.methodIdx = methodIdx;

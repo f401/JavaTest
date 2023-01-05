@@ -11,6 +11,16 @@ public class DexCode {
 	public int insnsSize;//指令集的个数
 	public short[] insns;//指令
 			     
+	public DexCode(short registersSize, short insSize, short outsSize, short triesSize, int debugInfoOff, int insnsSize) {
+		this.registersSize = registersSize;
+		this.insSize = insSize;
+		this.outsSize = outsSize;
+		this.triesSize = triesSize;
+		this.debugInfoOff = debugInfoOff;
+		this.insnsSize = insnsSize;
+		this.insns = new short[insnsSize];
+	}
+
 	@Override
 	public String toString() {
 		return "DexCode [registersSize=" + registersSize + ", insSize=" + insSize + ", outsSize=" + outsSize
