@@ -3,6 +3,7 @@ package net.qpowei.mcdownload.handler.value;
 import java.util.Map;
 
 import net.qpowei.mcdownload.handler.value.analysed.AnalysedAssetIndex;
+import net.qpowei.mcdownload.mirror.providers.IProviders;
 
 public class AssetsIndex
 {
@@ -23,7 +24,7 @@ public class AssetsIndex
 		return "AssetsIndex [objects=" + objects + "]";
 	}
 	
-	public AnalysedAssetIndex analyse() {
-		return AnalysedAssetIndex.analyse(this);
+	public AnalysedAssetIndex analyse(IProviders providers) {
+		return AnalysedAssetIndex.analyse(this, providers);
 	}
 }

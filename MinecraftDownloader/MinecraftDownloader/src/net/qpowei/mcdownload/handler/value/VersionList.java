@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.qpowei.mcdownload.handler.AbstractSupportedGetVersion;
 import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionList;
+import net.qpowei.mcdownload.mirror.providers.IProviders;
 
 public class VersionList extends AbstractSupportedGetVersion<VersionList.Version> {
 
@@ -60,7 +61,7 @@ public class VersionList extends AbstractSupportedGetVersion<VersionList.Version
 		return null;
 	}
 
-	public AnalysedVersionList analyse() {
-		return AnalysedVersionList.analyse(this);
+	public AnalysedVersionList analyse(IProviders providers) {
+		return AnalysedVersionList.analyse(this, providers);
 	}
 }

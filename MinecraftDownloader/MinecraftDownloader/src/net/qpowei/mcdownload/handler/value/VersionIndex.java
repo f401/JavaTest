@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import net.qpowei.mcdownload.handler.types.StringAndRules;
 import net.qpowei.mcdownload.handler.value.analysed.AnalysedVersionIndex;
+import net.qpowei.mcdownload.mirror.providers.IProviders;
 
 public class VersionIndex {
 	// 与直接放在包里的类不同，直接放在包里的是指assets index(比如1.19.json)文件，
@@ -197,8 +198,8 @@ public class VersionIndex {
 				+ ", releaseTime=" + releaseTime + ", logging=" + logging + "]";
 	}
 
-	public AnalysedVersionIndex analyse() {
-		return AnalysedVersionIndex.analyse(this);
+	public AnalysedVersionIndex analyse(IProviders provider) {
+		return AnalysedVersionIndex.analyse(this, provider);
 	}
 
 }

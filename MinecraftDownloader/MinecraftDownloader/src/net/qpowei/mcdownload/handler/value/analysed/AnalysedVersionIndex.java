@@ -7,7 +7,6 @@ import net.qpowei.mcdownload.handler.types.StringAndRules;
 import net.qpowei.mcdownload.handler.value.URLSizedProperties;
 import net.qpowei.mcdownload.handler.value.VersionIndex;
 import net.qpowei.mcdownload.mirror.providers.IProviders;
-import net.qpowei.mcdownload.MCDConstants;
 import net.qpowei.mcdownload.util.OperatingSystem;
 
 public class AnalysedVersionIndex implements IMirrorProperties
@@ -49,7 +48,7 @@ public class AnalysedVersionIndex implements IMirrorProperties
 	private IProviders provider;
 	
 	// :(
-	public AnalysedVersionIndex(StringAndRules[] argumentsGame, StringAndRules[] argumentsJVM, String assetsName, String assetsURL, String assetsSHA1, int assetsSize, int assetsTotalSize, int assetsComplianceLevel, String versionName, String javaComponent, int javaMajorVersion, String time, String releaseTime, String mainClass, String type, int minimumLauncherVersion, String loggingArguments, String loggingFileType, String loggingFileName, String loggingFileURL, String loggingFileSHA1, int loggingFileSize, AnalysedVersionIndex.DependentLibrary[] dependsLibrary, Map<String, MinecraftMainJarJnfo> mainJar) {
+	public AnalysedVersionIndex(StringAndRules[] argumentsGame, StringAndRules[] argumentsJVM, String assetsName, String assetsURL, String assetsSHA1, int assetsSize, int assetsTotalSize, int assetsComplianceLevel, String versionName, String javaComponent, int javaMajorVersion, String time, String releaseTime, String mainClass, String type, int minimumLauncherVersion, String loggingArguments, String loggingFileType, String loggingFileName, String loggingFileURL, String loggingFileSHA1, int loggingFileSize, AnalysedVersionIndex.DependentLibrary[] dependsLibrary, Map<String, MinecraftMainJarJnfo> mainJar, IProviders provider) {
 		this.argumentsGame = argumentsGame;
 		this.argumentsJVM = argumentsJVM;
 		this.assetsIndexName = assetsName;
@@ -75,7 +74,7 @@ public class AnalysedVersionIndex implements IMirrorProperties
 		this.dependsLibrary = dependsLibrary;
 		this.mainJar = mainJar;
 		
-		this.provider = MCDConstants.defaultProviders;
+		this.provider = provider;
 	}
 
 	public StringAndRules[] getArgumentsGame() {
@@ -174,7 +173,7 @@ public class AnalysedVersionIndex implements IMirrorProperties
 		return mainJar.get(needle);
 	}
 	
-	public static AnalysedVersionIndex analyse(VersionIndex src) {
+	public static AnalysedVersionIndex analyse(VersionIndex src, IProviders provider) {
 		
 		StringAndRules[] gameArgs = null, jvmArgs = null;
 		
@@ -209,17 +208,17 @@ public class AnalysedVersionIndex implements IMirrorProperties
 			loggingArguments, loggingFileType,
 			loggingFileName, loggingFileURL,
 			loggingFileSHA1, loggingFileSize, 
-			DependentLibrary.analyse(src.libraries), MinecraftMainJarJnfo.analyse(src.downloads)
+			DependentLibrary.analyse(src.libraries, provider), MinecraftMainJarJnfo.analyse(src.downloads, provider), provider
 		);
 	}
 	
 	@Override
-	public IProviders getMirrorProvider() {
+	public IProviders getProvider() {
 		return provider;
 	}
 
 	@Override
-	public void setMirrorProvider(IProviders provider) {
+	public void setProvider(IProviders provider) {
 		setMirrorProvider(provider, true);
 	}
 	
@@ -227,11 +226,11 @@ public class AnalysedVersionIndex implements IMirrorProperties
 		this.provider = provider;
 		if (async) {
 			for (DependentLibrary entry : dependsLibrary) {
-				entry.setMirrorProvider(provider);
+				entry.setProvider(provider);
 			}
 			
 			for (Map.Entry<String, MinecraftMainJarJnfo> entry : mainJar.entrySet()) {
-				entry.getValue().setMirrorProvider(provider);
+				entry.getValue().setProvider(provider);
 			}
 		}
 	}
@@ -241,7 +240,8 @@ public class AnalysedVersionIndex implements IMirrorProperties
 		private final String url, sha1;
 		private final int size;
 
-		public MinecraftMainJarJnfo(String url, String sha1, int size) {
+		public MinecraftMainJarJnfo(String url, String sha1, int size, IProviders providers) {
+			super(providers);
 			this.url = url;
 			this.sha1 = sha1;
 			this.size = size;
@@ -261,12 +261,12 @@ public class AnalysedVersionIndex implements IMirrorProperties
 			return size;
 		}
 		
-		public static Map<String, MinecraftMainJarJnfo> analyse(Map<String, URLSizedProperties> src) {
+		public static Map<String, MinecraftMainJarJnfo> analyse(Map<String, URLSizedProperties> src, IProviders provider) {
 			Map<String, MinecraftMainJarJnfo> result = new HashMap<>(4);
 			for (Map.Entry<String, URLSizedProperties> entry : src.entrySet()) {
 				URLSizedProperties value = entry.getValue();
 				result.put(entry.getKey(), new MinecraftMainJarJnfo(
-				    value.url, value.sha1, value.size));
+				    value.url, value.sha1, value.size, provider));
 			}
 			return result;
 		}
@@ -280,7 +280,8 @@ public class AnalysedVersionIndex implements IMirrorProperties
 		private final int size;
 		private final Natives natives;
 
-		public DependentLibrary(String name, VersionIndex.Rules[] rules, String url, String sha1, int size, String path, Natives natives) {
+		public DependentLibrary(String name, VersionIndex.Rules[] rules, String url, String sha1, int size, String path, Natives natives, IProviders provider) {
+			super(provider);
 			this.name = name;
 			this.rules = rules;
 			this.url = url;
@@ -387,7 +388,8 @@ public class AnalysedVersionIndex implements IMirrorProperties
 				private final String url, sha1, path;
 				private final int size;
 
-				public Native(String url, String sha1, int size, String path) {
+				public Native(String url, String sha1, int size, String path, IProviders provider) {
+					super(provider);
 					this.url = url;
 					this.sha1 = sha1;
 					this.size = size;
@@ -436,11 +438,11 @@ public class AnalysedVersionIndex implements IMirrorProperties
 				}
 			}
 			
-			public static Natives analyse(VersionIndex.DependentLibrary src) {
+			public static Natives analyse(VersionIndex.DependentLibrary src, IProviders provider) {
 				if (src.downloads.classifiers != null) {
 			    	Map<String, Native> natives = new HashMap<>(src.downloads.classifiers.size());
 				    for (Map.Entry<String, VersionIndex.DependentLibrary.LibraryDownload.Artifact> entry: src.downloads.classifiers.entrySet()) {
-					    natives.put(entry.getKey(), new Native(entry.getValue().url, entry.getValue().sha1, entry.getValue().size, entry.getValue().path));
+					    natives.put(entry.getKey(), new Native(entry.getValue().url, entry.getValue().sha1, entry.getValue().size, entry.getValue().path, provider));
 				    }
 					return new Natives(natives, Extract.analyse(src.extract), src.natives.linux, src.natives.windows, src.natives.osx);
 				}
@@ -448,7 +450,7 @@ public class AnalysedVersionIndex implements IMirrorProperties
 			}
 		}
 		
-		public static AnalysedVersionIndex.DependentLibrary[] analyse(VersionIndex.DependentLibrary[] src) {
+		public static AnalysedVersionIndex.DependentLibrary[] analyse(VersionIndex.DependentLibrary[] src, IProviders provider) {
 			ArrayList<AnalysedVersionIndex.DependentLibrary> result = new ArrayList<>();
 			for (VersionIndex.DependentLibrary entry : src) {
 				String artifactURL = null, artifactSHA1 = null, artifactPath = null;
@@ -462,7 +464,7 @@ public class AnalysedVersionIndex implements IMirrorProperties
 				}
 				
 				result.add(new DependentLibrary(entry.name, entry.rules, 
-				    artifactURL, artifactSHA1, artifactSize, artifactPath, Natives.analyse(entry)));
+				    artifactURL, artifactSHA1, artifactSize, artifactPath, Natives.analyse(entry, provider), provider));
 			}
 			return result.toArray(new DependentLibrary[result.size()]);
 		}

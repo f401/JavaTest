@@ -1,8 +1,8 @@
 package net.qpowei.mcdownload.mirror;
 
-import net.qpowei.mcdownload.mirror.providers.IProviders;
+import net.qpowei.mcdownload.mirror.providers.IProvidersSetters;
 
-public class DefaultProviders implements IProviders
+public class DefaultProviders implements IProvidersSetters
 {
 	
 	private ICacher cacher;

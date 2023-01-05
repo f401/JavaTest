@@ -8,21 +8,17 @@ public abstract class AbstractMinecraftMirrorProperties implements IMinecraftMir
 
 	IProviders provider;
 	
-	public AbstractMinecraftMirrorProperties() {
-		this(MCDConstants.defaultProviders);
-	}
-	
 	public AbstractMinecraftMirrorProperties(IProviders provider) {
 		this.provider = provider;
 	}
 	
 	@Override
-	public IProviders getMirrorProvider() {
+	public IProviders getProvider() {
 		return provider;
 	}
 
 	@Override
-	public void setMirrorProvider(IProviders provider) {
+	public void setProvider(IProviders provider) {
 		this.provider = provider;
 	}
 }

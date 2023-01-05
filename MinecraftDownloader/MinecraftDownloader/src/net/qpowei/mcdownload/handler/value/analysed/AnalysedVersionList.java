@@ -19,12 +19,13 @@ public class AnalysedVersionList extends AbstractSupportedGetVersion<AnalysedVer
 
 		private final int complianceLevel;// only for version_manifest_v2
 
-		public Version(String name, String url, String type, String time, String releaseTime) {
-			this(name, url, type, time, releaseTime, 0);
+		public Version(String name, String url, String type, String time, String releaseTime, IProviders providers) {
+			this(name, url, type, time, releaseTime, 0, providers);
 		}
 
 		public Version(String name, String url, String type, String time, String releaseTime,
-				int complianceLevel) {
+				int complianceLevel, IProviders providers) {
+			super(providers);
 			this.name = name;
 			this.url = url;
 			this.type = type;
@@ -69,11 +70,11 @@ public class AnalysedVersionList extends AbstractSupportedGetVersion<AnalysedVer
 		}
 
 	}
-	public static AnalysedVersionList analyse(VersionList src) {
+	public static AnalysedVersionList analyse(VersionList src, IProviders providers) {
 		ArrayList<Version> versions = new ArrayList<>(src.versions.length);
 		for (VersionList.Version entry : src.versions) {
 			versions.add(new Version(entry.id, entry.url, entry.type, entry.time, entry.releaseTime,
-					entry.complianceLevel));
+					entry.complianceLevel, providers));
 		}
 		return new AnalysedVersionList(src.latest.get(VersionListTypes.TYPE_RELEASE),
 				src.latest.get(VersionListTypes.TYPE_SNAPSHOT),

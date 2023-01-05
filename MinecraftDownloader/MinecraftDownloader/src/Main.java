@@ -6,14 +6,17 @@ import net.qpowei.mcdownload.MinecraftDownloader;
 import net.qpowei.mcdownload.VersionProfile;
 import net.qpowei.mcdownload.mirror.DefaultMirrors;
 import net.qpowei.mcdownload.util.MultiFileDownloader;
+import net.qpowei.mcdownload.mirror.DefaultProviders;
 
 public class Main {
 	
 	public static void main(String[] args) throws IOException {
 		long start = System.currentTimeMillis();
-		MCDConstants.defaultProviders.setMirror(DefaultMirrors.BMCLAPI);
-		new MinecraftDownloader(new VersionProfile("1.16.5", "1.16.5", "/opt/mc", false), 
-		new MultiFileDownloader(), 
+		
+		DefaultProviders provider = DefaultProviders.create();
+		provider.setMirror(DefaultMirrors.BMCLAPI);
+		new MinecraftDownloader(new VersionProfile("1.16.5", "1.16.5", "/sdcard/mc", false), 
+		new MultiFileDownloader(), provider,
 		    new MultiFileDownloader.DownloadEvent() {
 
 				@Override
@@ -25,7 +28,7 @@ public class Main {
 				@Override
 				public void onDownload(String input, File to, long curr, long total, double speeding) {
 					if (curr / total == 1) {
-						System.out.println(input + " finished");
+						System.out.println(input + " finished, speeding " + speeding);
 					}
 				}
 
@@ -45,7 +48,7 @@ public class Main {
 				@Override
 				public void onDownload(String input, File to, long curr, long total, double speeding) {
 					if (curr / total == 1) {
-						System.out.println(to + " finished");
+						System.out.println(to + " finished, speeding " + speeding);
 					}
 				}
 
@@ -65,7 +68,7 @@ public class Main {
 				@Override
 				public void onDownload(String input, File to, long curr, long total, double speeding) {
 					if (curr / total == 1) {
-						System.out.println(input + " finished");
+						System.out.println(input + " finished, speeding " + speeding);
 					}
 				}
 

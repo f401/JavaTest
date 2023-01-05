@@ -15,12 +15,9 @@ import net.qpowei.mcdownload.mirror.providers.IProviders;
 
 public class MCDConstants
 {
-	public static int bestThreadCount = Math.max(6, Runtime.getRuntime().availableProcessors() * 2);
-	public static ExecutorService mcdThreadPool = new ThreadPoolExecutor(0, bestThreadCount, 5, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 	public static Gson gson = new GsonBuilder().setPrettyPrinting()
 	.registerTypeAdapter(StringAndRules.class, new RulesStringAdapter())
 	.create();
 	public static int BUFFER_SIZE = 1024;
-	public static IProviders defaultProviders = DefaultProviders.create();
-	public static String defaultVersionListPath = "/opt/mc/version_manifest_v2.json";
+	public static String defaultVersionListPath = "/sdcard/mc/version_manifest_v2.json";
 }

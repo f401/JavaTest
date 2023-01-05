@@ -45,7 +45,7 @@ public class MultiFileDownloader
 	}
 	
 	public MultiFileDownloader(DownloadEvent event) {
-		this(5, 2000, MCDConstants.bestThreadCount, 10000, event, null);
+		this(5, 2000, Math.max(6, Runtime.getRuntime().availableProcessors() * 2), 10000, event, null);
 	}
 	
 	public MultiFileDownloader() {
@@ -79,12 +79,20 @@ public class MultiFileDownloader
 		byte[] buffer = new byte[MCDConstants.BUFFER_SIZE];
 		
 		int size = 0;
-		long totalSize = connection.getContentLength(), downloadedSize = 0, start = System.currentTimeMillis();
+		double speeding = 0;
+		long totalSize = connection.getContentLength(), downloadedSize = 0, start = System.currentTimeMillis(), sizeInTime = 0;
 		
 		while ((size = urlStream.read(buffer)) > 0) {
 			downloadedSize += size;
+			sizeInTime += size;
 			if (event != null) {
-				event.onDownload(input, to, downloadedSize, totalSize, downloadedSize / (double)((System.currentTimeMillis() - start)/1000));
+				long spent = System.currentTimeMillis() - start;
+				if (spent >= 500) {
+					speeding = (sizeInTime / 500) * 8;
+					start = System.currentTimeMillis();
+					sizeInTime = 0;
+				}
+				event.onDownload(input, to, downloadedSize, totalSize, speeding);
 			}
 			fos.write(buffer, 0, size);
 		}
@@ -112,12 +120,12 @@ public class MultiFileDownloader
 	}
 	
 	public void startMultiThreadDownloadNonBlocking() {
-		MCDConstants.mcdThreadPool.execute(new Runnable() {
+			new Thread(new Runnable() {
 				@Override
 				public void run() {
 					startMultiThreadDownloadBlocking();
 				}
-			});
+			}, "MinecraftDownloader").start();
 	}
 	
 	public boolean downloadFinished() {

@@ -15,7 +15,8 @@ public class AnalysedAssetIndex implements IMirrorProperties {
 		private final String name, sha1;
 		private final int size;
 
-		public AssetInfo(String name, String sha1, int size) {
+		public AssetInfo(String name, String sha1, int size, IProviders provider) {
+			super(provider);
 			this.name = name;
 			this.sha1 = sha1;
 			this.size = size;
@@ -49,22 +50,22 @@ public class AnalysedAssetIndex implements IMirrorProperties {
 
 	}
 
-	public static AnalysedAssetIndex analyse(AssetsIndex index) {
+	public static AnalysedAssetIndex analyse(AssetsIndex index, IProviders provider) {
 		ArrayList<AnalysedAssetIndex.AssetInfo> result = new ArrayList<>(index.objects.size());
 		for (Map.Entry<String, AssetsIndex.AssetsInfo> entry : index.objects.entrySet()) {
 			result.add(new AnalysedAssetIndex.AssetInfo(entry.getKey(), entry.getValue().hash,
-					entry.getValue().size));
+					entry.getValue().size, provider));
 		}
-		return new AnalysedAssetIndex(result.toArray(new AnalysedAssetIndex.AssetInfo[result.size()]));
+		return new AnalysedAssetIndex(result.toArray(new AnalysedAssetIndex.AssetInfo[result.size()]), provider);
 	}
 
 	private final AssetInfo objects[];
 
 	private IProviders provider;
 
-	public AnalysedAssetIndex(AssetInfo[] objects) {
+	public AnalysedAssetIndex(AssetInfo[] objects, IProviders provider) {
 		this.objects = objects;
-		this.provider = MCDConstants.defaultProviders;
+		this.provider = provider;
 	}
 
 	@Override
@@ -73,19 +74,19 @@ public class AnalysedAssetIndex implements IMirrorProperties {
 	}
 
 	@Override
-	public IProviders getMirrorProvider() {
+	public IProviders getProvider() {
 		return provider;
 	}
 
 	@Override
-	public void setMirrorProvider(IProviders provider) {
+	public void setProvider(IProviders provider) {
 		setMirrorProvider(provider, true);
 	}
 
 	public void setMirrorProvider(IProviders provider, boolean async) {
 		this.provider = provider;
 		for (AssetInfo info : objects) {
-			info.setMirrorProvider(provider);
+			info.setProvider(provider);
 		}
 	}
 

@@ -75,7 +75,8 @@ public class DefaultCacher implements ICacher
 
 	@Override
 	public AnalysedVersionIndex.DependentLibrary[] getShouldDownloadLibraries(VersionProfile profile, AnalysedVersionIndex.DependentLibrary[] src) {
-		if (new File(profile.getRootDir()).exists()) {
+		if (new File(profile.getRootDir()).exists() && 
+		    new File(urlProvider.getURLPath().getLibraryDir(profile)).exists()) {
 			ArrayList<AnalysedVersionIndex.DependentLibrary> result = new ArrayList<>();
 			for (AnalysedVersionIndex.DependentLibrary entry:src) {
 				if (entry.hasArtifact()) {
@@ -91,7 +92,8 @@ public class DefaultCacher implements ICacher
 	
 	@Override
 	public AnalysedAssetIndex getShouldDownloadAssetsList(VersionProfile profile, AnalysedAssetIndex index) {
-		if (new File(profile.getRootDir()).exists()) {
+		if (new File(profile.getRootDir()).exists() && 
+		    new File(urlProvider.getURLPath().getAssetsDir(profile)).exists()) {
 			ArrayList<AnalysedAssetIndex.AssetInfo> result = new ArrayList<>();
 			for (int i = 0; i < index.size(); ++i) {
 			    File file = new File(urlProvider.getURLPath().getAssetsSavePath(profile, index.get(i).getSha1()));
@@ -99,7 +101,8 @@ public class DefaultCacher implements ICacher
 					result.add(index.get(i));
 				}
 			}
-			return new AnalysedAssetIndex(result.toArray(new AnalysedAssetIndex.AssetInfo[result.size()]));
+			return new AnalysedAssetIndex(result.toArray(new AnalysedAssetIndex.AssetInfo[result.size()]), 
+				index.getProvider());
 		}
 		return index;
 	}

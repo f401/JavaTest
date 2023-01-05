@@ -38,12 +38,6 @@ public class MinecraftDownloader {
 		this.extractList = new ArrayList<>();
 	}
 
-	public MinecraftDownloader(VersionProfile profile, MultiFileDownloader downloader,
-			MultiFileDownloader.DownloadEvent assetsEvent, MultiFileDownloader.DownloadEvent jarEvent,
-			MultiFileDownloader.DownloadEvent jsonEvent) {
-		this(profile, downloader, MCDConstants.defaultProviders, assetsEvent, jarEvent, jsonEvent);
-	}
-
 	public void setProviders(IProviders providers) {
 		this.providers = providers;
 	}
@@ -61,11 +55,11 @@ public class MinecraftDownloader {
 	}
 
 	public void downloadAssets(File json) {
-		AnalysedAssetIndex index = JsonParser.parseAssetsIndex(json).analyse();
+		AnalysedAssetIndex index = JsonParser.parseAssetsIndex(json).analyse(providers);
 		index = providers.getCacher().getShouldDownloadAssetsList(profile, index);
 		if (index != null) {
 			for (int i = 0; i < index.size(); ++i) {
-				downloader.addIntoDownloadList(index.get(i).getURL(), MCDConstants.defaultProviders
+				downloader.addIntoDownloadList(index.get(i).getURL(), providers
 						.getURLPath().getAssetsSavePath(profile, index.get(i).getSha1()));
 			}
 			downloader.startMultiThreadDownloadBlocking();
@@ -180,13 +174,13 @@ public class MinecraftDownloader {
 		AnalysedVersionList list = null;
 		downloader.setEvent(jsonEvent);
 		try {
-			list = JsonParser.parseVersionList(versionList).analyse();
+			list = JsonParser.parseVersionList(versionList).analyse(providers);
 		} catch (Exception e) {
 			downloadVersionList(versionList);
-			list = JsonParser.parseVersionList(versionList).analyse();
+			list = JsonParser.parseVersionList(versionList).analyse(providers);
 		}
 		File verIndex = downloadVersionIndex(list.getVersionByString(profile.getVersionName()));
-		AnalysedVersionIndex aIndex = JsonParser.parseVersionIndex(verIndex).analyse();
+		AnalysedVersionIndex aIndex = JsonParser.parseVersionIndex(verIndex).analyse(providers);
 		File assetsIndexFile = downloadAssetsIndex(aIndex);
 		downloader.setEvent(jarEvent);
 		downloadMainJar(aIndex);
