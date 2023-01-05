@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import net.qpowei.filereader.EndianRandomAccessFile;
+import net.qpowei.filereader.android.dex.value.DexCode;
 import net.qpowei.filereader.android.dex.value.DexField;
 import net.qpowei.filereader.android.dex.value.DexFile;
 import net.qpowei.filereader.android.dex.value.DexHeader;
@@ -160,6 +161,17 @@ public class DexReader extends EndianRandomAccessFile {
 		seek(curr);
 	}
 
+	private DexCode readDexCode(int offset) throws IOException {
+		long curr = getFilePointer();
+		seek(offset);
+		DexCode dc = new DexCode(readShort(), readShort(), readShort(), readShort(), readInt(), readInt());
+		for (int i = 0; i < dc.insnsSize; ++i) {
+			dc.insns[i] = readShort();
+		} 
+		seek(curr);
+		return dc;
+	}
+
 	private void readClassData(DexFile file) throws IOException {
 		long curr = getFilePointer();
 		for (DexClassDef define : file.classDefs) {
@@ -187,12 +199,17 @@ public class DexReader extends EndianRandomAccessFile {
 				}
 
 				for (int i = 0; i < cdata.header.directMethodsSize.get(); ++i) {
-					cdata.directMethods.add(new DexMethod(readIntUleb128(), readIntUleb128(), readIntUleb128()));
+					DexMethod method = new DexMethod(readIntUleb128(), readIntUleb128(), readIntUleb128());
+					method.code = readDexCode(method.codeOff.get());
+					cdata.directMethods.add(method);
 				}
 
 				for (int i = 0; i < cdata.header.virtualMethodsSize.get(); ++i) {
-					cdata.virtualMethods.add(new DexMethod(readIntUleb128(), readIntUleb128(), readIntUleb128()));
+					DexMethod method = new DexMethod(readIntUleb128(), readIntUleb128(), readIntUleb128());
+					method.code = readDexCode(method.codeOff.get());
+					cdata.virtualMethods.add(method);
 				}
+
 				data.data = cdata;
 			}
 			file.classes.add(data);
