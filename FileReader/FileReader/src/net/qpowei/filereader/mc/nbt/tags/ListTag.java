@@ -1,34 +1,39 @@
 package net.qpowei.filereader.mc.nbt.tags;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import com.google.gson.stream.JsonWriter;
+
 import net.qpowei.filereader.mc.nbt.TagTypes;
 
-public class ListTag extends BaseArrayTag<Tag<?>>
-{
+public class ListTag extends BaseArrayTag<Tag<?>> {
 
 	private final TagTypes entryType;
-	
+
 	public ListTag(String key, ArrayList<Tag<?>> value, TagTypes entryType) {
 		super(key, value);
 		this.entryType = entryType;
-		for (Tag t : value) {
+		for (Tag<?> t : value) {
 			if (t.type() != entryType) {
-				throw new UnsupportedOperationException("Type should be: " + entryType + ", but " + t.type() + ", toString: " + t.toString());
+				throw new UnsupportedOperationException("Type should be: " + entryType + ", but "
+						+ t.type() + ", toString: " + t.toString());
 			}
 		}
 	}
-	
+
 	@Override
 	public ListTag copy() {
 		ArrayList<Tag<?>> list = new ArrayList<>(value.size());
-		for (Tag<?> t: value) list.add(t.copy());
+		for (Tag<?> t : value)
+			list.add(t.copy());
 		return new ListTag(key, list, entryType);
 	}
 
 	public TagTypes getEntryType() {
 		return entryType;
 	}
-	
+
 	@Override
 	public TagTypes type() {
 		return TagTypes.List;
@@ -37,7 +42,8 @@ public class ListTag extends BaseArrayTag<Tag<?>>
 	@Override
 	public void add(Tag<?> t) {
 		if (entryType != t.type()) {
-			throw new UnsupportedOperationException("Type should be: " + entryType + ", but " + t.type() + ", toString: " + t.toString());
+			throw new UnsupportedOperationException("Type should be: " + entryType + ", but " + t.type()
+					+ ", toString: " + t.toString());
 		}
 		super.add(t);
 	}
@@ -54,6 +60,17 @@ public class ListTag extends BaseArrayTag<Tag<?>>
 		}
 		result.append("]");
 		return result.toString();
+	}
+
+	@Override
+	protected void write(JsonWriter writer, boolean writeKey) throws IOException {
+		if (writeKey)
+			writer.name(key);
+		writer.beginArray();
+		for (Tag<?> t : value) {
+			t.write(writer, false);
+		}
+		writer.endArray();
 	}
 
 }

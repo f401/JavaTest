@@ -1,5 +1,9 @@
 package net.qpowei.filereader.mc.nbt.tags;
 
+import java.io.IOException;
+
+import com.google.gson.stream.JsonWriter;
+
 import net.qpowei.filereader.mc.nbt.TagTypes;
 
 public class LongTag extends Tag<Long>
@@ -17,6 +21,13 @@ public class LongTag extends Tag<Long>
 	@Override
 	public TagTypes type() {
 		return TagTypes.Long;
+	}
+
+	@Override
+	protected void write(JsonWriter writer, boolean writeKey) throws IOException {
+		if (writeKey)
+			writer.name(key);
+		writer.value(value);
 	}
 	
 }

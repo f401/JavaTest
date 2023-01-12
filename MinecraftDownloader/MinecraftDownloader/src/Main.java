@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.IOException;
 
-import net.qpowei.mcdownload.MCDConstants;
 import net.qpowei.mcdownload.MinecraftDownloader;
 import net.qpowei.mcdownload.VersionProfile;
 import net.qpowei.mcdownload.mirror.DefaultMirrors;
@@ -15,7 +14,7 @@ public class Main {
 		
 		DefaultProviders provider = DefaultProviders.create();
 		provider.setMirror(DefaultMirrors.BMCLAPI);
-		new MinecraftDownloader(new VersionProfile("1.16.5", "1.16.5", "/sdcard/mc", false), 
+		new MinecraftDownloader(new VersionProfile("1.16.5", "1.16.5", "/opt/mc", false), 
 		new MultiFileDownloader(), provider,
 		    new MultiFileDownloader.DownloadEvent() {
 

@@ -1,7 +1,11 @@
 package net.qpowei.filereader.mc.nbt.tags;
+
+import java.io.IOException;
 import java.util.ArrayList;
+
+import com.google.gson.stream.JsonWriter;
+
 import net.qpowei.filereader.mc.nbt.TagTypes;
-import java.util.Collections;
 
 public class LongArrayTag extends BaseArrayTag<Long>
 {
@@ -20,6 +24,15 @@ public class LongArrayTag extends BaseArrayTag<Long>
 	@Override
 	public TagTypes type() {
 		return TagTypes.LongArray;
+	}
+
+	@Override
+	protected void write(JsonWriter writer, boolean writeKey) throws IOException {
+		if (writeKey)
+			writer.name(key);
+		writer.beginArray();
+		for (long i : value) writer.value(i);
+		writer.endArray();
 	}
 	
 }

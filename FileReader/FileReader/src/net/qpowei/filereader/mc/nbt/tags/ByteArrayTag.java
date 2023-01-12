@@ -1,6 +1,10 @@
 package net.qpowei.filereader.mc.nbt.tags;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import com.google.gson.stream.JsonWriter;
+
 import net.qpowei.filereader.mc.nbt.TagTypes;
 
 public class ByteArrayTag extends BaseArrayTag<Byte>
@@ -20,6 +24,17 @@ public class ByteArrayTag extends BaseArrayTag<Byte>
 	@Override
 	public TagTypes type() {
 		return TagTypes.ByteArray;
+	}
+
+	@Override
+	protected void write(JsonWriter writer, boolean writeKey) throws IOException {
+		if (writeKey)
+			writer.name(key);
+		writer.beginArray();
+		for (byte b : value) {
+			writer.value(b);
+		}
+		writer.endArray();
 	}
 	
 }

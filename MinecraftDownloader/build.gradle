@@ -15,10 +15,10 @@ jar {
 	}
 	if (rootProject.ext.PACKAGE_WITH_DEP) {
 		from {
-        	configurations.default.collect {
-       	    	 it.isDirectory() ? it : zipTree(it)
-       		 }
-    	}
+        		configurations.default.collect {
+       	    			 it.isDirectory() ? it : zipTree(it)
+       		 	}
+    		}
 	}
 	archiveFileName = "MinecraftDownloader-${releaseName}.jar"
 }

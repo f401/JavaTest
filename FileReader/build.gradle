@@ -1,5 +1,4 @@
 apply plugin: 'java'
-apply plugin: 'eclipse'
 
 group = 'net.qpowei.filereader'
 
@@ -15,10 +14,10 @@ jar {
 	}
 	if (rootProject.ext.PACKAGE_WITH_DEP) {
 		from {
-        	configurations.default.collect {
-       	    	 it.isDirectory() ? it : zipTree(it)
-       		 }
-    	}
+        		configurations.default.collect {
+       	    			 it.isDirectory() ? it : zipTree(it)
+       			}
+  	  	}
 	}
 	destinationDirectory.set(file("../outputs"))
 	archiveFileName = "FileReader-${releaseName}.jar"
@@ -39,4 +38,8 @@ sourceSets {
 			}
 		}
 	}
+}
+
+dependencies {
+    implementation fileTree(dir: 'FileReader/libs', include: ['*.jar'])
 }

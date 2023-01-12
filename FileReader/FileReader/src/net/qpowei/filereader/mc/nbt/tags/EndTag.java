@@ -1,5 +1,9 @@
 package net.qpowei.filereader.mc.nbt.tags;
 
+import java.io.IOException;
+
+import com.google.gson.stream.JsonWriter;
+
 import net.qpowei.filereader.mc.nbt.TagTypes;
 
 public class EndTag extends Tag<Byte>
@@ -43,6 +47,12 @@ public class EndTag extends Tag<Byte>
 	@Override
 	public String toString() {
 		return "Tag_EndTag {}";
+	}
+
+
+	@Override
+	protected void write(JsonWriter writer, boolean writeKey) throws IOException {
+		//Do nothing
 	}
 	
 }
