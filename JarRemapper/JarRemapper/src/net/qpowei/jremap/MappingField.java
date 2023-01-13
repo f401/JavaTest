@@ -7,7 +7,7 @@ public class MappingField implements IMappingable {
 	public MappingField(String realName, String proguardName, String type) {
 		this.realName = realName;
 		this.proguardName = proguardName;
-		this.type = type;
+		this.type = type.replaceAll("\\.", "/");
 	}
 
 	public String getType() {

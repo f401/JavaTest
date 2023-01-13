@@ -19,8 +19,10 @@ public class MappingsReader {
 
 	public void readMappings() throws IOException {
 		String line = null;
+		
 		while ((line = reader.readLine().trim()) != null) {
 			if (line.startsWith("#")) continue;
+			
 		}
 	}
 }
