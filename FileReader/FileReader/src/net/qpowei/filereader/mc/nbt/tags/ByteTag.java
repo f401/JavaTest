@@ -1,8 +1,7 @@
 package net.qpowei.filereader.mc.nbt.tags;
+
 import java.io.IOException;
-
 import com.google.gson.stream.JsonWriter;
-
 import net.qpowei.filereader.mc.nbt.TagTypes;
 
 public class ByteTag extends Tag<Byte>

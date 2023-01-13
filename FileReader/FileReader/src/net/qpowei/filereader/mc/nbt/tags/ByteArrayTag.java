@@ -36,5 +36,5 @@ public class ByteArrayTag extends BaseArrayTag<Byte>
 		}
 		writer.endArray();
 	}
-	
+
 }

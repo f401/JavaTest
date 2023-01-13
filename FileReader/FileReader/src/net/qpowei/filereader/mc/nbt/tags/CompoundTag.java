@@ -32,7 +32,9 @@ public class CompoundTag extends BaseArrayTag<Tag<?>>
 			writer.name(key);
 		writer.beginObject();
 		for (Tag<?> tag : value) {
-			tag.write(writer);
+			if (tag != null) {
+				tag.write(writer);	
+			}
 		}
 		writer.endObject();
 	}

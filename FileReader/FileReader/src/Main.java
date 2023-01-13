@@ -33,15 +33,34 @@ public class Main {
 		dis.close();
 	}
 
+	public static void mcnbt_gson() {
+		DoubleTag dt = new DoubleTag("DoubleTag", 1.123456789);
+		FloatTag ft = new FloatTag("FloatTag", 123.4f);
+
+		ArrayList<Tag<?>> rootList = new ArrayList<>(2);
+		rootList.add(dt);
+		rootList.add(ft);
+		
+		CompoundTag root = new CompoundTag(null, rootList);
+
+		Gson gson = TagAdapter.configGsonBuilder(new GsonBuilder().setPrettyPrinting()).create();
+
+		String json = gson.toJson(root);
+		System.out.println(json);
+		System.out.println(gson.fromJson(json, Tag.class));
+	}
+
 	public static void mcnbt() throws FileNotFoundException, IOException {
 		NBTInputStream nis = new NBTInputStream(
 				new FileInputStream("/opt/JavaTest/FileReader/exampleFiles/ship.nbt"));
 		Tag<?> tag = nis.readTag();
-		System.out.println(tag);
 
 		Gson gson = TagAdapter.configGsonBuilder(new GsonBuilder().setPrettyPrinting()).create();
-		System.out.println(gson.toJson(tag));
-
+		String json = gson.toJson(tag);
+		System.out.println(json);
+		Tag<?> tag2 = gson.fromJson(json, Tag.class);
+		System.err.println(gson.toJson(tag2));
+		
 		nis.close();
 		NBTOutputStream nos = new NBTOutputStream(new FileOutputStream("/opt/JavaTest/ship.nbt"));
 		nos.writeTag(tag);

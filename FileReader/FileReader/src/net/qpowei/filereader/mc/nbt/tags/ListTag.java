@@ -11,14 +11,23 @@ public class ListTag extends BaseArrayTag<Tag<?>> {
 
 	private final TagTypes entryType;
 
+	public ListTag(String key, ArrayList<Tag<?>> value) {
+		this(key, value, value.size() != 0 ? value.get(0).type() : null);
+	}
+
 	public ListTag(String key, ArrayList<Tag<?>> value, TagTypes entryType) {
 		super(key, value);
 		this.entryType = entryType;
-		for (Tag<?> t : value) {
-			if (t.type() != entryType) {
-				throw new UnsupportedOperationException("Type should be: " + entryType + ", but "
-						+ t.type() + ", toString: " + t.toString());
+		if (value != null) {
+			for (Tag<?> t : value) {
+				if (t.type() != entryType) {
+					throw new UnsupportedOperationException(
+							"Type should be: " + entryType + ", but "
+									+ t.type() + ", toString: " + t.toString());
+				}
 			}
+		} else {
+			this.value = new ArrayList<>();
 		}
 	}
 
@@ -68,7 +77,9 @@ public class ListTag extends BaseArrayTag<Tag<?>> {
 			writer.name(key);
 		writer.beginArray();
 		for (Tag<?> t : value) {
-			t.write(writer, false);
+			if (t != null) {
+				t.write(writer, false);
+			}
 		}
 		writer.endArray();
 	}

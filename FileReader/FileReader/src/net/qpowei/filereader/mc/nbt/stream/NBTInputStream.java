@@ -36,7 +36,7 @@ public class NBTInputStream extends EndianDataInputStream
 	
 	private Tag<?> readTag(String key, byte tagType) throws IOException {
 		switch(tagType) {
-		    case 1://Byte
+		 	case 1://Byte
 			    return new ByteTag(key, readByte());
 			case 2://Short
 			    return new ShortTag(key, readShort());

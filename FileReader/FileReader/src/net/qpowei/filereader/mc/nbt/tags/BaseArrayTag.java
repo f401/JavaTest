@@ -1,12 +1,11 @@
 package net.qpowei.filereader.mc.nbt.tags;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-abstract class BaseArrayTag<T> extends Tag<ArrayList<T>> {
+public abstract class BaseArrayTag<T> extends Tag<ArrayList<T>> {
 
 	public BaseArrayTag(String key, ArrayList<T> value) {
-		super(key, value);
+		super(key, value == null ? new ArrayList<T>() : value);
 	}
 
 	public boolean has(T t) {
@@ -28,7 +27,7 @@ abstract class BaseArrayTag<T> extends Tag<ArrayList<T>> {
 	@Override
 	public String toString() {
 		return "Tag_" + type().getDisplayName() + "{" + "key: " + key + ", " +
-				Arrays.toString(value.toArray())
+				value
 				+ "}";
 	}
 
