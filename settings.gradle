@@ -10,4 +10,3 @@
 rootProject.name = 'JavaTest'
 include('MinecraftDownloader')
 include('FileReader')
-include('JarRemapper')
