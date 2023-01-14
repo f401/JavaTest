@@ -1,7 +1,33 @@
-package net.qpowei.filereader.android.dex.value;
+package net.qpowei.filereader.android.dex.struct;
 
 import java.util.Arrays;
-
+/*
+struct DexHeader {
+	      u1  magic[8];           // includes version number 
+	      u4  checksum;           // adler32 checksum
+	      u1  signature[kSHA1DigestLen]; /* SHA-1 hash 
+	      u4  fileSize;           // length of entire file 
+	      u4  headerSize;         // offset to start of next section
+	      u4  endianTag;
+	      u4  linkSize;
+	      u4  linkOff;
+	      u4  mapOff;
+	      u4  stringIdsSize;
+	      u4  stringIdsOff;
+	      u4  typeIdsSize;
+	      u4  typeIdsOff;
+	      u4  protoIdsSize;
+	      u4  protoIdsOff;
+	      u4  fieldIdsSize;
+	      u4  fieldIdsOff;
+	      u4  methodIdsSize;
+	      u4  methodIdsOff;
+	      u4  classDefsSize;
+	      u4  classDefsOff;
+	      u4  dataSize;
+	      u4  dataOff;
+};
+*/
 public class DexHeader {
 	public byte[] magicNumber = new byte[8];
 	public int checksum; 
@@ -50,11 +76,4 @@ public class DexHeader {
 
 	public int dataSize;
 	public int dataOffset;
-	
-	public boolean compareMagic() {
-		for (int i = 0; i < 8; ++i) {
-			if (DexConstants.MAGIC_NUMBER[i] != magicNumber[i]) return false;
-		}
-		return true;
-	}
 }
